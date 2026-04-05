@@ -32,14 +32,13 @@ const ThumbItem = ({ url, active, onClick, index }) => {
   return (
     <button
       onClick={onClick}
-      className={`relative flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden transition-all duration-200 ${
-        active
+      className={`relative flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden transition-all duration-200 ${active
           ? 'ring-2 ring-amber-500 ring-offset-2 ring-offset-stone-50 dark:ring-offset-stone-950 scale-105'
           : 'opacity-60 hover:opacity-100'
-      }`}
+        }`}
     >
       <img
-        src={err ? '/img-resin-tray.png' : driveThumbnail(url, 'w200')}
+        src={err ? 'https://sparshdivineartstudios.github.io/sparsh/img-resin-tray.png' : driveThumbnail(url, 'w200')}
         alt={`View ${index + 1}`}
         onError={() => setErr(true)}
         className="w-full h-full object-cover"
@@ -60,7 +59,7 @@ const PhotoViewer = ({ images, driveFolderId }) => {
   const currentFileId = currentRaw ? getDriveFileId(currentRaw) : null;
   const currentThumb = currentRaw && !imgErr
     ? driveThumbnail(currentRaw, 'w900')
-    : '/img-resin-tray.png';
+    : 'https://sparshdivineartstudios.github.io/sparsh/img-resin-tray.png';
 
   const goNext = () => { setImgErr(false); setSelected(s => (s + 1) % images.length); };
   const goPrev = () => { setImgErr(false); setSelected(s => (s - 1 + images.length) % images.length); };
@@ -284,7 +283,7 @@ const RelatedCard = ({ product: p, idx }) => {
     >
       <Link to={`/products/${p._id}`} className="block aspect-[4/5] relative overflow-hidden rounded-xl bg-stone-100 dark:bg-stone-900 mb-3 shadow-sm group-hover:shadow-md transition-shadow">
         <img
-          src={err ? '/img-resin-tray.png' : driveThumbnail(p.images?.[0], 'w500')}
+          src={err ? 'https://sparshdivineartstudios.github.io/sparsh/img-resin-tray.png' : driveThumbnail(p.images?.[0], 'w500')}
           alt={p.name}
           onError={() => setErr(true)}
           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"

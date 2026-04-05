@@ -22,7 +22,7 @@ const Login = () => {
 
   return (
     <main className="min-h-screen flex items-center justify-center py-24 px-8">
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
@@ -56,15 +56,15 @@ const Login = () => {
               className="w-full bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded px-4 py-3 text-sm font-sans focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600 text-stone-900 dark:text-stone-50 transition-all"
             />
           </div>
-          
-          <button 
-            type="submit" 
+
+          <button
+            type="submit"
             className="w-full mt-2 bg-stone-900 dark:bg-stone-50 text-stone-50 dark:text-stone-900 py-4 rounded font-sans tracking-widest uppercase text-xs font-semibold hover:bg-amber-600 dark:hover:bg-amber-600 hover:text-white transition-colors"
           >
             Sign In
           </button>
         </form>
-        
+
         <p className="text-center mt-8 text-stone-500 text-sm font-sans">
           Don't have an account? <Link to="/register" className="text-amber-600 hover:underline font-medium">Create one</Link>
         </p>

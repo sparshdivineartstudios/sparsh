@@ -40,7 +40,7 @@ const About = () => {
       <section className="w-full h-[500px] md:h-[650px] overflow-hidden mb-28 relative">
         <motion.img
           style={{ y: yImage }}
-          src="/img-studio.png"
+          src="https://sparshdivineartstudios.github.io/sparsh/img-studio.png"
           alt="Studio Workshop"
           className="w-full h-[120%] object-cover object-center absolute inset-0 opacity-90 dark:opacity-70"
         />

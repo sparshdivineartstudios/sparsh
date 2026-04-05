@@ -35,7 +35,7 @@ const ProductCard = ({ product, idx }) => {
   // Use Drive thumbnail URL for reliable loading
   const imgSrc = rawSrc && !imgError
     ? driveThumbnail(rawSrc)
-    : '/img-resin-tray.png';
+    : 'https://sparshdivineartstudios.github.io/sparsh/img-resin-tray.png';
 
   // Category badge colour
   const badgeColor = {
@@ -119,11 +119,10 @@ const ProductCard = ({ product, idx }) => {
 const FilterPill = ({ label, active, onClick, count }) => (
   <button
     onClick={onClick}
-    className={`inline-flex items-center gap-2 px-5 py-2 rounded-full font-sans text-xs font-semibold uppercase tracking-widest transition-all duration-200 border ${
-      active
+    className={`inline-flex items-center gap-2 px-5 py-2 rounded-full font-sans text-xs font-semibold uppercase tracking-widest transition-all duration-200 border ${active
         ? 'bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-900 border-stone-900 dark:border-amber-500 shadow-md'
         : 'bg-transparent text-stone-600 dark:text-stone-400 border-stone-300 dark:border-stone-700 hover:border-stone-500 dark:hover:border-stone-500 hover:text-stone-900 dark:hover:text-stone-200'
-    }`}
+      }`}
   >
     {label}
     <span className={`text-[10px] font-bold ${active ? 'opacity-70' : 'opacity-50'}`}>
@@ -195,9 +194,9 @@ const Products = () => {
     }
     // Sort
     switch (sortBy) {
-      case 'price-asc':  list.sort((a, b) => (a.priceNum||0) - (b.priceNum||0)); break;
-      case 'price-desc': list.sort((a, b) => (b.priceNum||0) - (a.priceNum||0)); break;
-      case 'name-asc':   list.sort((a, b) => a.name.localeCompare(b.name)); break;
+      case 'price-asc': list.sort((a, b) => (a.priceNum || 0) - (b.priceNum || 0)); break;
+      case 'price-desc': list.sort((a, b) => (b.priceNum || 0) - (a.priceNum || 0)); break;
+      case 'name-asc': list.sort((a, b) => a.name.localeCompare(b.name)); break;
       default: break;
     }
     return list;

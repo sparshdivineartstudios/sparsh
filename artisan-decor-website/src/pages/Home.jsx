@@ -41,12 +41,12 @@ const Marquee = () => {
 /* ─── Featured Product Card ─── */
 const ProductCard = ({ product, idx }) => {
   const [imgLoaded, setImgLoaded] = useState(false);
-  const [imgErr, setImgErr]     = useState(false);
+  const [imgErr, setImgErr] = useState(false);
 
   const rawSrc = product.images?.[0];
   const imgSrc = rawSrc && !imgErr
     ? driveThumbnail(rawSrc, 'w600')
-    : '/img-resin-tray.png';
+    : 'https://sparshdivineartstudios.github.io/sparsh/img-resin-tray.png';
 
   return (
     <motion.div
@@ -67,9 +67,8 @@ const ProductCard = ({ product, idx }) => {
             alt={product.name}
             onLoad={() => setImgLoaded(true)}
             onError={() => { setImgErr(true); setImgLoaded(true); }}
-            className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 ${
-              imgLoaded ? 'opacity-100' : 'opacity-0'
-            }`}
+            className={`w-full h-full object-cover transition-all duration-700 group-hover:scale-110 ${imgLoaded ? 'opacity-100' : 'opacity-0'
+              }`}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
             <span className="text-white font-sans text-xs uppercase tracking-widest font-semibold">View Details →</span>
@@ -126,11 +125,11 @@ const Home = () => {
             {/* Desktop: wide landscape shot with all 3 products in frame */}
             <source
               media="(min-width: 768px)"
-              srcSet="/img-hero-desktop.png"
+              srcSet="https://sparshdivineartstudios.github.io/sparsh/img-hero-desktop.png"
             />
             {/* Mobile: portrait lifestyle shot */}
             <img
-              src="/img-hero-bg.png"
+              src="https://sparshdivineartstudios.github.io/sparsh/img-hero-bg.png"
               alt="Sparsh Divine Art Studio — Resin Art, Soy Candles & Concrete Antiques"
               fetchPriority="high"
               className="w-full h-full object-cover object-center"
@@ -242,21 +241,21 @@ const Home = () => {
               title: 'Resin Art',
               subtitle: 'Fluid · Luminous · Eternal',
               desc: 'Each resin piece is poured by hand — pigments swirled through liquid glass, frozen mid-flow into abstract landscapes. No two pieces are ever alike.',
-              img: '/img-resin-wall.png',
+              img: 'https://sparshdivineartstudios.github.io/sparsh/img-resin-wall.png',
               badge: 'Best Seller',
             },
             {
               title: 'Wax Candles',
               subtitle: 'Warm · Aromatic · Mindful',
               desc: 'Hand-poured soy wax candles in concrete vessels, infused with essential oils. Light one and let the room breathe. Perfect for gifting or keeping.',
-              img: '/img-candle-set.png',
+              img: 'https://sparshdivineartstudios.github.io/sparsh/img-candle-set.png',
               badge: 'Fan Favourite',
             },
             {
               title: 'Concrete Antiques',
               subtitle: 'Raw · Bold · Timeless',
               desc: 'Sculptural concrete pieces with golden detailing — vases, trays, coasters, and bookends that bring brutalist beauty into everyday living.',
-              img: '/img-coasters.png',
+              img: 'https://sparshdivineartstudios.github.io/sparsh/img-coasters.png',
               badge: 'New Arrivals',
             },
           ].map((cat, idx) => (
@@ -343,9 +342,9 @@ const Home = () => {
           /* Fallback: local generated images if API fails */
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {[
-              { img: '/img-resin-tray.png', name: 'Obsidian Resin Tray', price: '₹2,499', tag: 'Resin Art' },
-              { img: '/img-candle.png', name: 'Amber Soy Pillar Candle', price: '₹1,299', tag: 'Wax Candle' },
-              { img: '/img-concrete-vase.png', name: 'Brutalist Concrete Vase', price: '₹3,799', tag: 'Concrete Antique' },
+              { img: 'https://sparshdivineartstudios.github.io/sparsh/img-resin-tray.png', name: 'Obsidian Resin Tray', price: '₹2,499', tag: 'Resin Art' },
+              { img: 'https://sparshdivineartstudios.github.io/sparsh/img-candle.png', name: 'Amber Soy Pillar Candle', price: '₹1,299', tag: 'Wax Candle' },
+              { img: 'https://sparshdivineartstudios.github.io/sparsh/img-concrete-vase.png', name: 'Brutalist Concrete Vase', price: '₹3,799', tag: 'Concrete Antique' },
             ].map((item, idx) => (
               <motion.div
                 key={idx}
@@ -381,7 +380,7 @@ const Home = () => {
         <div className="w-full md:w-1/2 relative h-[400px] md:h-auto overflow-hidden">
           <motion.img
             style={{ y: aboutImgY }}
-            src="/img-studio.png"
+            src="https://sparshdivineartstudios.github.io/sparsh/img-studio.png"
             alt="Artist at Work"
             className="absolute inset-0 w-full h-[130%] object-cover object-center"
           />
@@ -662,10 +661,10 @@ const Home = () => {
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
-            '/img-resin-tray.png',
-            '/img-candle.png',
-            '/img-coasters.png',
-            '/img-concrete-vase.png',
+            'https://sparshdivineartstudios.github.io/sparsh/img-resin-tray.png',
+            'https://sparshdivineartstudios.github.io/sparsh/img-candle.png',
+            'https://sparshdivineartstudios.github.io/sparsh/img-coasters.png',
+            'https://sparshdivineartstudios.github.io/sparsh/img-concrete-vase.png',
           ].map((img, idx) => (
             <motion.div
               key={idx}
