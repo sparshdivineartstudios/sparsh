@@ -4,7 +4,8 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: './',   // required for GitHub Pages (relative paths)
+  // Update this to your repository name wrapped in slashes
+  base: '/sparsh/',
   server: {
     port: 8080,
     strictPort: true,
@@ -12,6 +13,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    // Optional: ensures an empty dist folder before every build
+    emptyOutDir: true,
   }
 })
-
