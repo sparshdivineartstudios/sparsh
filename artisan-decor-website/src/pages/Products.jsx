@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
 /* ─────────────────────────────────────────────
@@ -167,6 +167,7 @@ const CATEGORIES = ['All', 'Resin Art', 'Wax Candles', 'Concrete Decor'];
 
 const Products = () => {
   const { isAdmin } = useAuth();
+  const [searchParams] = useSearchParams();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState('All');
@@ -179,6 +180,14 @@ const Products = () => {
       .catch(err => console.error('Error fetching products:', err))
       .finally(() => setLoading(false));
   }, []);
+
+  // Apply category filter from URL on mount
+  useEffect(() => {
+    const categoryParam = searchParams.get('category');
+    if (categoryParam && CATEGORIES.includes(categoryParam)) {
+      setActiveFilter(categoryParam);
+    }
+  }, [searchParams]);
 
   // Count per category
   const counts = useMemo(() => {

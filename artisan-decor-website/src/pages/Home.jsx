@@ -297,7 +297,7 @@ const Home = () => {
               transition={{ duration: 0.6, delay: idx * 0.15 }}
               className="group relative overflow-hidden rounded-2xl shadow-lg cursor-pointer"
             >
-              <Link to="/products">
+              <Link to={`/products?category=${encodeURIComponent(cat.title)}`}>
                 <div className="relative h-[480px] overflow-hidden">
                   <img
                     src={cat.img}
