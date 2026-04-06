@@ -13,7 +13,7 @@ const Footer = () => {
           </Link>
           <p className="font-sans text-xs uppercase tracking-widest text-amber-600 mb-4">Sparsh Divine Art Studio</p>
           <p className="font-sans text-sm text-stone-500 dark:text-stone-400 leading-relaxed">
-            Handcrafted resin art, soy wax candles &amp; concrete antiques — made with love in Pune, India. Every piece is one of a kind.
+            Handcrafted resin art, soy wax candles &amp; concrete antiques — made with love in Ahmedabad, India. Every piece is one of a kind.
           </p>
           <div className="flex gap-5 mt-6">
             {['Instagram', 'Pinterest', 'WhatsApp'].map((s, i) => (

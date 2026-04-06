@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
 const NavBar = () => {
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, logout, isAdmin } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const isDarkMode = theme === 'dark';
   const [scrolled, setScrolled] = useState(false);
@@ -83,6 +83,15 @@ const NavBar = () => {
 
           {isAuthenticated ? (
             <>
+              {isAdmin && (
+                <Link
+                  to="/admin/add"
+                  title="Add Product"
+                  className={`transition-colors hover:text-amber-600 ${iconClass}`}
+                >
+                  <span className="material-symbols-outlined text-[20px]">add_circle</span>
+                </Link>
+              )}
               <Link to="/favorites" className={`transition-colors hover:text-amber-600 ${iconClass}`}>
                 <span className="material-symbols-outlined text-[20px]">favorite</span>
               </Link>

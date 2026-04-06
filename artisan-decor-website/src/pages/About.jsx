@@ -40,7 +40,7 @@ const About = () => {
       <section className="w-full h-[500px] md:h-[650px] overflow-hidden mb-28 relative">
         <motion.img
           style={{ y: yImage }}
-          src="https://sparshdivineartstudios.github.io/sparsh/img-studio.png"
+          src="https://sparshdivineartstudio.me/img-studio.png"
           alt="Studio Workshop"
           className="w-full h-[120%] object-cover object-center absolute inset-0 opacity-90 dark:opacity-70"
         />
@@ -63,7 +63,7 @@ const About = () => {
           <h2 className="font-serif text-3xl md:text-4xl text-stone-900 dark:text-stone-50 mb-6">How Sparsh began</h2>
           <div className="space-y-5 font-sans text-stone-600 dark:text-stone-400 leading-relaxed">
             <p>
-              Sparsh — meaning <em>touch</em> in Sanskrit — started as a deeply personal project. Tired of cold, mass-produced décor, our founder poured her first resin tray at a kitchen table in Pune with nothing but a YouTube tutorial and a lot of pigment.
+              Sparsh — meaning <em>touch</em> in Sanskrit — started as a deeply personal project. Tired of cold, mass-produced décor, our founder poured her first resin tray at a kitchen table in Ahmedabad with nothing but a YouTube tutorial and a lot of pigment.
             </p>
             <p>
               That first piece found its way to a friend's shelf. Then to another. Then strangers started asking. It became clear: people were hungry for something made by hands, not machines. For something that carries a story.

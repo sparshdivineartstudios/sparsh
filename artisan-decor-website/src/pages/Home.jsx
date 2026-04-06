@@ -46,7 +46,7 @@ const ProductCard = ({ product, idx }) => {
   const rawSrc = product.images?.[0];
   const imgSrc = rawSrc && !imgErr
     ? driveThumbnail(rawSrc, 'w600')
-    : 'https://sparshdivineartstudios.github.io/sparsh/img-resin-tray.png';
+    : 'https://sparshdivineartstudio.me/img-resin-tray.png';
 
   return (
     <motion.div
@@ -107,13 +107,43 @@ const Home = () => {
 
   const [featuredProducts, setFeaturedProducts] = useState([]);
   const [productsLoading, setProductsLoading] = useState(true);
+  const [allProducts, setAllProducts] = useState([]);
+  const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
     axios.get('https://home-8zob.onrender.com/api/products')
-      .then(res => setFeaturedProducts((res.data || []).slice(0, 3)))
-      .catch(() => setFeaturedProducts([]))
+      .then(res => {
+        const data = res.data || [];
+        setAllProducts(data);
+        setFeaturedProducts(data.slice(0, 3));
+      })
+      .catch(() => { })
       .finally(() => setProductsLoading(false));
   }, []);
+
+  useEffect(() => {
+    axios.get('https://home-8zob.onrender.com/api/reviews')
+      .then(res => setReviews(res.data || []))
+      .catch(() => { });
+  }, []);
+
+  // Pick first product image per category for the category cards
+  const catImgs = {
+    'Resin Art': 'https://sparshdivineartstudio.me/img-resin-wall.png',
+    'Wax Candles': 'https://sparshdivineartstudio.me/img-candle-set.png',
+    'Concrete Decor': 'https://sparshdivineartstudio.me/img-coasters.png',
+  };
+  // const catImgs = {
+  //   'Resin Art': driveThumbnail(allProducts.find(p => p.category === 'Resin Art')?.images?.[0], 'w800') || catImgFallbacks['Resin Art'],
+  //   'Wax Candles': driveThumbnail(allProducts.find(p => p.category === 'Wax Candles')?.images?.[0], 'w800') || catImgFallbacks['Wax Candles'],
+  //   'Concrete Decor': driveThumbnail(allProducts.find(p => p.category === 'Concrete Decor')?.images?.[0], 'w800') || catImgFallbacks['Concrete Decor'],
+  // };
+
+  // Instagram grid: first 4 product images
+  const gridImages = allProducts
+    .filter(p => p.images?.[0])
+    .slice(0, 4)
+    .map(p => ({ url: driveThumbnail(p.images[0], 'w400'), id: p._id }));
 
   return (
     <main className="bg-stone-50 dark:bg-stone-950 transition-colors duration-500 overflow-x-hidden">
@@ -125,11 +155,11 @@ const Home = () => {
             {/* Desktop: wide landscape shot with all 3 products in frame */}
             <source
               media="(min-width: 768px)"
-              srcSet="https://sparshdivineartstudios.github.io/sparsh/img-hero-desktop.png"
+              srcSet="https://sparshdivineartstudio.me/img-hero-desktop.png"
             />
             {/* Mobile: portrait lifestyle shot */}
             <img
-              src="https://sparshdivineartstudios.github.io/sparsh/img-hero-bg.png"
+              src="https://sparshdivineartstudio.me/img-hero-bg.png"
               alt="Sparsh Divine Art Studio — Resin Art, Soy Candles & Concrete Antiques"
               fetchPriority="high"
               className="w-full h-full object-cover object-center"
@@ -241,21 +271,21 @@ const Home = () => {
               title: 'Resin Art',
               subtitle: 'Fluid · Luminous · Eternal',
               desc: 'Each resin piece is poured by hand — pigments swirled through liquid glass, frozen mid-flow into abstract landscapes. No two pieces are ever alike.',
-              img: 'https://sparshdivineartstudios.github.io/sparsh/img-resin-wall.png',
+              img: catImgs['Resin Art'] || catImgFallbacks['Resin Art'],
               badge: 'Best Seller',
             },
             {
               title: 'Wax Candles',
               subtitle: 'Warm · Aromatic · Mindful',
               desc: 'Hand-poured soy wax candles in concrete vessels, infused with essential oils. Light one and let the room breathe. Perfect for gifting or keeping.',
-              img: 'https://sparshdivineartstudios.github.io/sparsh/img-candle-set.png',
+              img: catImgs['Wax Candles'] || catImgFallbacks['Wax Candles'],
               badge: 'Fan Favourite',
             },
             {
-              title: 'Concrete Antiques',
+              title: 'Concrete Decor',
               subtitle: 'Raw · Bold · Timeless',
               desc: 'Sculptural concrete pieces with golden detailing — vases, trays, coasters, and bookends that bring brutalist beauty into everyday living.',
-              img: 'https://sparshdivineartstudios.github.io/sparsh/img-coasters.png',
+              img: catImgs['Concrete Decor'] || catImgFallbacks['Concrete Decor'],
               badge: 'New Arrivals',
             },
           ].map((cat, idx) => (
@@ -342,9 +372,9 @@ const Home = () => {
           /* Fallback: local generated images if API fails */
           <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
             {[
-              { img: 'https://sparshdivineartstudios.github.io/sparsh/img-resin-tray.png', name: 'Obsidian Resin Tray', price: '₹2,499', tag: 'Resin Art' },
-              { img: 'https://sparshdivineartstudios.github.io/sparsh/img-candle.png', name: 'Amber Soy Pillar Candle', price: '₹1,299', tag: 'Wax Candle' },
-              { img: 'https://sparshdivineartstudios.github.io/sparsh/img-concrete-vase.png', name: 'Brutalist Concrete Vase', price: '₹3,799', tag: 'Concrete Antique' },
+              { img: 'https://sparshdivineartstudio.me/img-resin-tray.png', name: 'Obsidian Resin Tray', price: '₹2,499', tag: 'Resin Art' },
+              { img: 'https://sparshdivineartstudio.me/img-candle.png', name: 'Amber Soy Pillar Candle', price: '₹1,299', tag: 'Wax Candle' },
+              { img: 'https://sparshdivineartstudio.me/img-concrete-vase.png', name: 'Brutalist Concrete Vase', price: '₹3,799', tag: 'Concrete Antique' },
             ].map((item, idx) => (
               <motion.div
                 key={idx}
@@ -380,7 +410,7 @@ const Home = () => {
         <div className="w-full md:w-1/2 relative h-[400px] md:h-auto overflow-hidden">
           <motion.img
             style={{ y: aboutImgY }}
-            src="https://sparshdivineartstudios.github.io/sparsh/img-studio.png"
+            src="https://sparshdivineartstudio.me/img-studio.png"
             alt="Artist at Work"
             className="absolute inset-0 w-full h-[130%] object-cover object-center"
           />
@@ -660,12 +690,12 @@ const Home = () => {
           </motion.h2>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-          {[
-            'https://sparshdivineartstudios.github.io/sparsh/img-resin-tray.png',
-            'https://sparshdivineartstudios.github.io/sparsh/img-candle.png',
-            'https://sparshdivineartstudios.github.io/sparsh/img-coasters.png',
-            'https://sparshdivineartstudios.github.io/sparsh/img-concrete-vase.png',
-          ].map((img, idx) => (
+          {(gridImages.length > 0 ? gridImages : [
+            { url: 'https://sparshdivineartstudio.me/img-resin-tray.png', id: null },
+            { url: 'https://sparshdivineartstudio.me/img-candle.png', id: null },
+            { url: 'https://sparshdivineartstudio.me/img-coasters.png', id: null },
+            { url: 'https://sparshdivineartstudio.me/img-concrete-vase.png', id: null },
+          ]).map((item, idx) => (
             <motion.div
               key={idx}
               initial={{ opacity: 0, scale: 0.95 }}
@@ -674,16 +704,90 @@ const Home = () => {
               transition={{ delay: idx * 0.1 }}
               className="relative overflow-hidden rounded-xl aspect-square group cursor-pointer"
             >
-              <img src={img} alt="Studio Work" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
-              <div className="absolute inset-0 bg-stone-900/0 group-hover:bg-stone-900/40 transition-all duration-300 flex items-center justify-center">
-                <span className="material-symbols-outlined text-white text-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">open_in_new</span>
-              </div>
+              {item.id ? (
+                <Link to={`/products/${item.id}`}>
+                  <img src={item.url} alt="Studio Work" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                  <div className="absolute inset-0 bg-stone-900/0 group-hover:bg-stone-900/40 transition-all duration-300 flex items-center justify-center">
+                    <span className="material-symbols-outlined text-white text-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">open_in_new</span>
+                  </div>
+                </Link>
+              ) : (
+                <img src={item.url} alt="Studio Work" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" />
+              )}
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* ── 11. NEWSLETTER ── */}
+      {/* ── 11. COMMUNITY REVIEWS FEED ── */}
+      {reviews.length > 0 && (
+        <section className="py-24 px-8 max-w-7xl mx-auto">
+          <div className="text-center mb-14">
+            <motion.p
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="font-sans text-amber-600 dark:text-amber-500 uppercase tracking-widest text-xs font-semibold mb-3"
+            >
+              Community
+            </motion.p>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="font-serif text-4xl md:text-5xl text-stone-900 dark:text-stone-50"
+            >
+              From Our Collectors
+            </motion.h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {reviews.slice(0, 6).map((review, idx) => (
+              <motion.div
+                key={review._id}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 flex flex-col justify-between shadow-sm hover:shadow-md hover:border-amber-500/40 transition-all duration-300"
+              >
+                <div>
+                  <div className="flex gap-0.5 mb-3">
+                    {[1, 2, 3, 4, 5].map(s => (
+                      <span key={s} className={`text-base ${s <= review.rating ? 'text-amber-500' : 'text-stone-200 dark:text-stone-700'}`}>★</span>
+                    ))}
+                  </div>
+                  {review.title && (
+                    <p className="font-serif text-base font-semibold text-stone-900 dark:text-stone-50 mb-2">{review.title}</p>
+                  )}
+                  <p className="font-sans text-stone-600 dark:text-stone-400 leading-relaxed text-sm italic mb-5">"{review.comment}"</p>
+                </div>
+                <div className="border-t border-stone-100 dark:border-stone-800 pt-4 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-7 h-7 bg-amber-500/20 rounded-full flex items-center justify-center">
+                      <span className="font-serif text-amber-600 text-sm font-bold">{review.user?.name?.[0]?.toUpperCase() || '?'}</span>
+                    </div>
+                    <div>
+                      <p className="font-serif text-stone-900 dark:text-stone-50 text-sm font-semibold">{review.user?.name || 'Collector'}</p>
+                      <p className="font-sans text-[10px] text-stone-400">{new Date(review.createdAt).toLocaleDateString('en-IN', { month: 'short', year: 'numeric' })}</p>
+                    </div>
+                  </div>
+                  {review.product && (
+                    <Link
+                      to={`/products/${review.product._id}`}
+                      className="text-amber-600 dark:text-amber-500 font-sans text-[10px] uppercase tracking-widest hover:underline"
+                    >
+                      {review.product.name?.split(' ').slice(0, 2).join(' ') || 'View'} →
+                    </Link>
+                  )}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {/* ── 12. NEWSLETTER ── */}
       <section className="py-20 px-8 bg-stone-100 dark:bg-stone-900/50">
         <div className="max-w-2xl mx-auto text-center">
           <motion.p

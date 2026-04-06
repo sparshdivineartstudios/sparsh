@@ -11,6 +11,8 @@ import Contact from './pages/Contact';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Favorites from './pages/Favorites';
+import AdminAddProduct from './pages/AdminAddProduct';
+import AdminEditProduct from './pages/AdminEditProduct';
 import ScrollToTop from './components/ScrollToTop';
 import CursorGlow from './components/CursorGlow';
 import { ThemeProvider } from './context/ThemeContext';
@@ -47,6 +49,8 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/favorites" element={<Favorites />} />
+              <Route path="/admin/add" element={<AdminAddProduct />} />
+              <Route path="/admin/edit/:id" element={<AdminEditProduct />} />
             </Routes>
             <Footer />
           </div>

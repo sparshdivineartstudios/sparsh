@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 /* ─────────────────────────────────────────────
    Extract Drive file ID from a Drive URL
@@ -28,14 +29,14 @@ function driveThumbnail(url = '', size = 'w600') {
 /* ─────────────────────────────────────────────
    Single Product Card
    ───────────────────────────────────────────── */
-const ProductCard = ({ product, idx }) => {
+const ProductCard = ({ product, idx, isAdmin }) => {
   const [imgError, setImgError] = useState(false);
 
   const rawSrc = product.images?.[0];
   // Use Drive thumbnail URL for reliable loading
   const imgSrc = rawSrc && !imgError
     ? driveThumbnail(rawSrc)
-    : 'https://sparshdivineartstudios.github.io/sparsh/img-resin-tray.png';
+    : 'https://sparshdivineartstudio.me/img-resin-tray.png';
 
   // Category badge colour
   const badgeColor = {
@@ -92,6 +93,18 @@ const ProductCard = ({ product, idx }) => {
             </span>
           </div>
         )}
+
+        {/* Admin edit overlay */}
+        {isAdmin && (
+          <Link
+            to={`/admin/edit/${product._id}`}
+            onClick={e => e.stopPropagation()}
+            className="absolute bottom-3 left-3 bg-amber-500 text-stone-900 text-[10px] font-sans font-bold uppercase tracking-widest px-2.5 py-1 rounded-full flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-amber-400 z-10"
+          >
+            <span className="material-symbols-outlined text-[12px]">edit</span>
+            Edit
+          </Link>
+        )}
       </Link>
 
       <div className="flex justify-between items-start px-1">
@@ -120,8 +133,8 @@ const FilterPill = ({ label, active, onClick, count }) => (
   <button
     onClick={onClick}
     className={`inline-flex items-center gap-2 px-5 py-2 rounded-full font-sans text-xs font-semibold uppercase tracking-widest transition-all duration-200 border ${active
-        ? 'bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-900 border-stone-900 dark:border-amber-500 shadow-md'
-        : 'bg-transparent text-stone-600 dark:text-stone-400 border-stone-300 dark:border-stone-700 hover:border-stone-500 dark:hover:border-stone-500 hover:text-stone-900 dark:hover:text-stone-200'
+      ? 'bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-900 border-stone-900 dark:border-amber-500 shadow-md'
+      : 'bg-transparent text-stone-600 dark:text-stone-400 border-stone-300 dark:border-stone-700 hover:border-stone-500 dark:hover:border-stone-500 hover:text-stone-900 dark:hover:text-stone-200'
       }`}
   >
     {label}
@@ -153,6 +166,7 @@ const SortSelect = ({ value, onChange }) => (
 const CATEGORIES = ['All', 'Resin Art', 'Wax Candles', 'Concrete Decor'];
 
 const Products = () => {
+  const { isAdmin } = useAuth();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeFilter, setActiveFilter] = useState('All');
@@ -331,10 +345,21 @@ const Products = () => {
         >
           <AnimatePresence mode="popLayout">
             {displayed.map((product, idx) => (
-              <ProductCard key={product._id} product={product} idx={idx} />
+              <ProductCard key={product._id} product={product} idx={idx} isAdmin={isAdmin} />
             ))}
           </AnimatePresence>
         </motion.div>
+      )}
+
+      {/* Admin FAB */}
+      {isAdmin && (
+        <Link
+          to="/admin/add"
+          className="fixed bottom-8 right-8 z-40 bg-amber-500 hover:bg-amber-400 text-stone-900 rounded-full w-14 h-14 flex items-center justify-center shadow-xl transition-all duration-200 hover:scale-110"
+          title="Add new product"
+        >
+          <span className="material-symbols-outlined text-[28px]">add</span>
+        </Link>
       )}
     </main>
   );
