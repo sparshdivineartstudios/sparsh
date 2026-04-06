@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import { useCart } from '../context/CartContext';
 
 const NavBar = () => {
   const { isAuthenticated, logout, isAdmin } = useAuth();
   const { theme, toggleTheme } = useTheme();
+  const { cartItems } = useCart();
   const isDarkMode = theme === 'dark';
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
@@ -105,9 +107,18 @@ const NavBar = () => {
             </Link>
           )}
 
-          <button className={`transition-colors hover:text-amber-600 ${iconClass}`}>
+          <Link 
+            to="/cart" 
+            className={`relative transition-colors hover:text-amber-600 ${iconClass}`}
+            title="View Cart"
+          >
             <span className="material-symbols-outlined text-[20px]">shopping_bag</span>
-          </button>
+            {cartItems.length > 0 && (
+              <span className="absolute -top-2 -right-2 bg-amber-500 text-stone-900 text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                {cartItems.length}
+              </span>
+            )}
+          </Link>
         </div>
 
       </div>

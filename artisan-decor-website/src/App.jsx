@@ -16,10 +16,16 @@ import AdminEditProduct from './pages/AdminEditProduct';
 import ShippingPolicy from './pages/ShippingPolicy';
 import CareInstructions from './pages/CareInstructions';
 import ReturnsRefunds from './pages/ReturnsRefunds';
+import Cart from './pages/Cart';
+import CheckoutShipping from './pages/CheckoutShipping';
+import CheckoutReview from './pages/CheckoutReview';
+import CheckoutPayment from './pages/CheckoutPayment';
+import OrderConfirmation from './pages/OrderConfirmation';
 import ScrollToTop from './components/ScrollToTop';
 import CursorGlow from './components/CursorGlow';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
+import { CartProvider } from './context/CartContext';
 
 function App() {
   // Show splash only on first load per session
@@ -35,32 +41,39 @@ function App() {
   return (
     <ThemeProvider>
       <AuthProvider>
-        {/* Splash — rendered outside router so it truly covers everything */}
-        {showSplash && <SplashScreen onDone={handleSplashDone} />}
+        <CartProvider>
+          {/* Splash — rendered outside router so it truly covers everything */}
+          {showSplash && <SplashScreen onDone={handleSplashDone} />}
 
-        <Router>
-          <ScrollToTop />
-          <CursorGlow />
-          <div className="bg-stone-50 dark:bg-stone-950 min-h-screen text-stone-900 dark:text-stone-50 transition-colors duration-500 font-sans selection:bg-amber-600 selection:text-white relative z-10">
-            <NavBar />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/products" element={<Products />} />
-              <Route path="/products/:id" element={<ProductDetails />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/favorites" element={<Favorites />} />
-              <Route path="/shipping-policy" element={<ShippingPolicy />} />
-              <Route path="/care-instructions" element={<CareInstructions />} />
-              <Route path="/returns-refunds" element={<ReturnsRefunds />} />
-              <Route path="/admin/add" element={<AdminAddProduct />} />
-              <Route path="/admin/edit/:id" element={<AdminEditProduct />} />
-            </Routes>
-            <Footer />
-          </div>
-        </Router>
+          <Router>
+            <ScrollToTop />
+            <CursorGlow />
+            <div className="bg-stone-50 dark:bg-stone-950 min-h-screen text-stone-900 dark:text-stone-50 transition-colors duration-500 font-sans selection:bg-amber-600 selection:text-white relative z-10">
+              <NavBar />
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/products" element={<Products />} />
+                <Route path="/products/:id" element={<ProductDetails />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/favorites" element={<Favorites />} />
+                <Route path="/shipping-policy" element={<ShippingPolicy />} />
+                <Route path="/care-instructions" element={<CareInstructions />} />
+                <Route path="/returns-refunds" element={<ReturnsRefunds />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout/shipping" element={<CheckoutShipping />} />
+                <Route path="/checkout/review" element={<CheckoutReview />} />
+                <Route path="/checkout/payment" element={<CheckoutPayment />} />
+                <Route path="/order-confirmation" element={<OrderConfirmation />} />
+                <Route path="/admin/add" element={<AdminAddProduct />} />
+                <Route path="/admin/edit/:id" element={<AdminEditProduct />} />
+              </Routes>
+              <Footer />
+            </div>
+          </Router>
+        </CartProvider>
       </AuthProvider>
     </ThemeProvider>
   );

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
+import { useCart } from '../context/CartContext';
 
 /* ─────────────────────────────────────────────
    Drive URL helpers (same as Products.jsx)
@@ -518,7 +519,9 @@ const ReviewsSection = ({ productId }) => {
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
   const { isAuthenticated, isAdmin, user, token } = useAuth();
+  const { addToCart } = useCart();
   const [product, setProduct] = useState(null);
   const [allProducts, setAllProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -583,6 +586,26 @@ const ProductDetails = () => {
       }
     } catch { }
     finally { setFavLoading(false); }
+  };
+
+  const handleAddToCart = () => {
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: location.pathname } });
+      return;
+    }
+    
+    // Extract numeric price (remove ₹ and any whitespace)
+    const numericPrice = parseFloat(product.price?.replace(/[₹\s]/g, '') || 0);
+    
+    addToCart({
+      _id: product._id,
+      name: product.name,
+      price: numericPrice,
+      image: product.images?.[0] || '',
+      category: product.category
+    });
+    
+    navigate('/cart');
   };
 
   if (loading) return (
@@ -681,7 +704,10 @@ const ProductDetails = () => {
 
           {/* CTA */}
           <div className="flex gap-3 mb-8">
-            <button className="flex-1 bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-900 py-4 font-sans uppercase tracking-widest text-xs font-bold hover:bg-amber-600 dark:hover:bg-amber-400 transition-colors rounded-lg">
+            <button 
+              onClick={handleAddToCart}
+              className="flex-1 bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-900 py-4 font-sans uppercase tracking-widest text-xs font-bold hover:bg-amber-600 dark:hover:bg-amber-400 transition-colors rounded-lg"
+            >
               Add to Cart
             </button>
             <button
