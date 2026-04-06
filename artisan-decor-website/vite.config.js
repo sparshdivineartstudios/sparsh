@@ -5,7 +5,7 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   // Update this to your repository name wrapped in slashes
-  base: '/sparsh/',
+  base: '/',
   server: {
     port: 8080,
     strictPort: true,
