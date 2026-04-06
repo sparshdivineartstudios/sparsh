@@ -41,13 +41,18 @@ const Contact = () => {
           <div>
             <h3 className="font-serif text-xl font-medium text-stone-900 dark:text-stone-50 mb-3">Follow the Studio</h3>
             <div className="flex gap-4">
-              {['Instagram', 'Pinterest'].map((s, i) => (
+              {[
+                { name: 'Instagram', url: 'https://www.instagram.com/_sparsh_divine_art_studio_' }
+                // ,{ name: 'Pinterest', url: 'https://pinterest.com/sparshdivineartstudio' }
+              ].map((social, i) => (
                 <a
                   key={i}
-                  href="#"
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="font-sans text-xs text-stone-500 hover:text-amber-600 uppercase tracking-widest transition-colors border-b border-stone-300 dark:border-stone-700 pb-0.5"
                 >
-                  {s}
+                  {social.name}
                 </a>
               ))}
             </div>

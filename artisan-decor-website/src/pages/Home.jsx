@@ -582,10 +582,10 @@ const Home = () => {
       <section className="bg-amber-600 dark:bg-amber-700 py-20 px-8">
         <div className="max-w-7xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
           {[
-            { stat: '500+', label: 'Pieces Crafted' },
+            { stat: '150+', label: 'Pieces Crafted' },
             { stat: '100%', label: 'Non-toxic Materials' },
             { stat: '3', label: 'Art Forms Mastered' },
-            { stat: '200+', label: 'Happy Customers' },
+            { stat: '30+', label: 'Happy Customers' },
           ].map((item, idx) => (
             <motion.div
               key={idx}

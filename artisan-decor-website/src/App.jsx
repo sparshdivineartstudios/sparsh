@@ -13,6 +13,9 @@ import Register from './pages/Register';
 import Favorites from './pages/Favorites';
 import AdminAddProduct from './pages/AdminAddProduct';
 import AdminEditProduct from './pages/AdminEditProduct';
+import ShippingPolicy from './pages/ShippingPolicy';
+import CareInstructions from './pages/CareInstructions';
+import ReturnsRefunds from './pages/ReturnsRefunds';
 import ScrollToTop from './components/ScrollToTop';
 import CursorGlow from './components/CursorGlow';
 import { ThemeProvider } from './context/ThemeContext';
@@ -49,6 +52,9 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/favorites" element={<Favorites />} />
+              <Route path="/shipping-policy" element={<ShippingPolicy />} />
+              <Route path="/care-instructions" element={<CareInstructions />} />
+              <Route path="/returns-refunds" element={<ReturnsRefunds />} />
               <Route path="/admin/add" element={<AdminAddProduct />} />
               <Route path="/admin/edit/:id" element={<AdminEditProduct />} />
             </Routes>

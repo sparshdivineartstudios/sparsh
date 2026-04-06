@@ -723,7 +723,7 @@ const ProductDetails = () => {
           <div className="space-y-3 font-sans text-sm text-stone-500 dark:text-stone-500 border-t border-stone-200 dark:border-stone-800 pt-6">
             <p className="flex items-center gap-3">
               <span className="material-symbols-outlined text-[18px] text-stone-400">local_shipping</span>
-              Ships across India · 5–7 business days
+              Ships across India · Delivery time depends on courier (typically 1-3 weeks)
             </p>
             <p className="flex items-center gap-3">
               <span className="material-symbols-outlined text-[18px] text-stone-400">verified</span>

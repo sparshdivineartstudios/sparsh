@@ -16,13 +16,19 @@ const Footer = () => {
             Handcrafted resin art, soy wax candles &amp; concrete antiques — made with love in Ahmedabad, India. Every piece is one of a kind.
           </p>
           <div className="flex gap-5 mt-6">
-            {['Instagram', 'Pinterest', 'WhatsApp'].map((s, i) => (
+            {[
+              { name: 'Instagram', url: 'https://www.instagram.com/_sparsh_divine_art_studio_' },
+              { name: 'Pinterest', url: 'https://pinterest.com/sparshdivineartstudio' },
+              { name: 'WhatsApp', url: 'https://wa.me/918160901481' }
+            ].map((social, i) => (
               <a
                 key={i}
-                href="#"
+                href={social.url}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="font-sans text-xs text-stone-400 hover:text-amber-600 uppercase tracking-widest transition-colors"
               >
-                {s}
+                {social.name}
               </a>
             ))}
           </div>
@@ -50,9 +56,9 @@ const Footer = () => {
           <div>
             <h4 className="font-sans font-bold text-stone-900 dark:text-stone-50 uppercase tracking-widest text-xs mb-6">Info</h4>
             <ul className="space-y-4">
-              <li><Link to="/" className="text-stone-500 hover:text-amber-600 font-sans text-sm transition-colors">Shipping Policy</Link></li>
-              <li><Link to="/" className="text-stone-500 hover:text-amber-600 font-sans text-sm transition-colors">Care Instructions</Link></li>
-              <li><Link to="/" className="text-stone-500 hover:text-amber-600 font-sans text-sm transition-colors">Returns &amp; Refunds</Link></li>
+              <li><Link to="/shipping-policy" className="text-stone-500 hover:text-amber-600 font-sans text-sm transition-colors">Shipping Policy</Link></li>
+              <li><Link to="/care-instructions" className="text-stone-500 hover:text-amber-600 font-sans text-sm transition-colors">Care Instructions</Link></li>
+              <li><Link to="/returns-refunds" className="text-stone-500 hover:text-amber-600 font-sans text-sm transition-colors">Returns &amp; Refunds</Link></li>
             </ul>
           </div>
         </div>
