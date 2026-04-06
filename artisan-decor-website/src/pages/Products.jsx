@@ -3,6 +3,7 @@ import axios from 'axios';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { API_URL } from '../utils/apiConfig';
 
 /* ─────────────────────────────────────────────
    Extract Drive file ID from a Drive URL
@@ -175,7 +176,7 @@ const Products = () => {
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
-    axios.get('https://home-8zob.onrender.com/api/products')
+    axios.get(`${API_URL}/api/products`)
       .then(res => setProducts(res.data || []))
       .catch(err => console.error('Error fetching products:', err))
       .finally(() => setLoading(false));

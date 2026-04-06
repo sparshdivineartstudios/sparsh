@@ -1,10 +1,12 @@
 /**
  * Convert Google Drive URLs to use backend proxy for CORS compatibility
  */
+import { API_URL } from './apiConfig';
+
 export const getProxyImageUrl = (imageUrl) => {
   if (!imageUrl) return null;
 
-  const apiBase = import.meta.env.VITE_API_URL || 'https://home-8zob.onrender.com';
+  const apiBase = API_URL;
 
   // If it's already a proxy URL, return as-is
   if (imageUrl.includes('/api/drive/file/')) {

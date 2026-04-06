@@ -4,6 +4,7 @@ import axios from 'axios';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
+import { API_URL } from '../utils/apiConfig';
 
 /* ─────────────────────────────────────────────
    Drive URL helpers (same as Products.jsx)
@@ -303,8 +304,6 @@ const RelatedCard = ({ product: p, idx }) => {
   );
 };
 
-const API = 'https://home-8zob.onrender.com';
-
 /* ─────────────────────────────────────────────
    Star Rating Display
    ───────────────────────────────────────────── */
@@ -337,7 +336,7 @@ const ReviewsSection = ({ productId }) => {
   const [hasReviewed, setHasReviewed] = useState(false);
 
   const fetchReviews = () => {
-    axios.get(`${API}/api/reviews/product/${productId}`)
+    axios.get(`${API_URL}/api/reviews/product/${productId}`)
       .then(res => {
         setReviews(res.data);
         if (user) setHasReviewed(res.data.some(r => r.user?._id === user._id || r.user?.id === user._id));
@@ -358,7 +357,7 @@ const ReviewsSection = ({ productId }) => {
     setFormErr('');
     setSubmitting(true);
     try {
-      await axios.post(`${API}/api/reviews/product/${productId}`, form);
+      await axios.post(`${API_URL}/api/reviews/product/${productId}`, form);
       setFormSuccess(true);
       setForm({ rating: 0, title: '', comment: '' });
       fetchReviews();
@@ -371,7 +370,7 @@ const ReviewsSection = ({ productId }) => {
 
   const handleDelete = async (reviewId) => {
     try {
-      await axios.delete(`${API}/api/reviews/${reviewId}`);
+      await axios.delete(`${API_URL}/api/reviews/${reviewId}`);
       fetchReviews();
     } catch { }
   };
@@ -530,7 +529,7 @@ const ProductDetails = () => {
   const [showScrollTop, setShowScrollTop] = useState(false);
 
   useEffect(() => {
-    axios.get(`${API}/api/products`)
+    axios.get(`${API_URL}/api/products`)
       .then(res => {
         const data = res.data || [];
         setAllProducts(data);
@@ -543,7 +542,7 @@ const ProductDetails = () => {
   // Fetch fav status
   useEffect(() => {
     if (!isAuthenticated) return;
-    axios.get(`${API}/api/favorites`)
+    axios.get(`${API_URL}/api/favorites`)
       .then(res => {
         const favs = res.data || [];
         setIsFav(favs.some(p => p._id === id));
@@ -578,10 +577,10 @@ const ProductDetails = () => {
     setFavLoading(true);
     try {
       if (isFav) {
-        await axios.delete(`${API}/api/favorites/${id}`);
+        await axios.delete(`${API_URL}/api/favorites/${id}`);
         setIsFav(false);
       } else {
-        await axios.post(`${API}/api/favorites/${id}`);
+        await axios.post(`${API_URL}/api/favorites/${id}`);
         setIsFav(true);
       }
     } catch { }

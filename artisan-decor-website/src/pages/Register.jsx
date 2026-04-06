@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { API_URL } from '../utils/apiConfig';
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -16,7 +17,7 @@ const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('https://home-8zob.onrender.com/api/auth/register', { name, email, password });
+      await axios.post(`${API_URL}/api/auth/register`, { name, email, password });
       setSuccess('Account created. Logging in...');
       setTimeout(async () => {
         await login(email, password);

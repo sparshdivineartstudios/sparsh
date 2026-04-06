@@ -1,9 +1,9 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import axios from 'axios';
 import { useAuth } from './AuthContext';
+import { API_URL } from '../utils/apiConfig';
 
 const CartContext = createContext();
-const API = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export const CartProvider = ({ children }) => {
   const { isAuthenticated, token } = useAuth();
@@ -13,7 +13,7 @@ export const CartProvider = ({ children }) => {
   // Helper function to create axios instance with current token
   const getCartAPI = () => {
     return axios.create({
-      baseURL: API,
+      baseURL: API_URL,
       headers: token ? { Authorization: `Bearer ${token}` } : {}
     });
   };
