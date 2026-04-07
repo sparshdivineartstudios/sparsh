@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
 
 const OrderConfirmation = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { token } = useAuth();
   const { orderId, amount } = location.state || {};
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -18,13 +20,58 @@ const OrderConfirmation = () => {
     // Fetch order details
     const fetchOrder = async () => {
       try {
-        const response = await fetch(`https://home-8zob.onrender.com/api/orders/${orderId}`, {
+        const apiUrl = import.meta.env.VITE_API_URL || 'https://home-8zob.onrender.com';
+        const response = await fetch(`${apiUrl}/api/orders/${orderId}`, {
           headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`,
+            'Authorization': `Bearer ${token}`,
           }
         });
         if (response.ok) {
-          const data = await response.json();
+          let data = await response.json();
+          
+          // Fetch product details for items that don't have prices
+          if (data.items && data.items.length > 0) {
+            const itemsWithPrices = await Promise.all(
+              data.items.map(async (item) => {
+                // If item already has a price, use it
+                if (item.price && item.price > 0) {
+                  return item;
+                }
+                
+                // If no productId, skip fetching
+                if (!item.productId) {
+                  return item;
+                }
+                
+                // Otherwise, fetch product details to get price
+                try {
+                  const productRes = await fetch(`${apiUrl}/api/products/${item.productId}`, {
+                    headers: {
+                      'Authorization': `Bearer ${token}`,
+                    }
+                  });
+                  
+                  if (productRes.ok) {
+                    const product = await productRes.json();
+                    return {
+                      ...item,
+                      price: typeof product.price === 'string' 
+                        ? parseFloat(product.price.replace(/[₹\s]/g, '')) 
+                        : (product.price || product.priceNum || item.price || 0),
+                        name: product.name || item.name
+                    };
+                  }
+                } catch (e) {
+                  console.error('Error fetching product details:', e);
+                }
+                
+                return item;
+              })
+            );
+            
+            data = { ...data, items: itemsWithPrices };
+          }
+          
           setOrder(data);
         }
       } catch (error) {
@@ -35,7 +82,7 @@ const OrderConfirmation = () => {
     };
 
     fetchOrder();
-  }, [orderId, navigate]);
+  }, [orderId, navigate, token]);
 
   if (loading) {
     return (
@@ -87,19 +134,29 @@ const OrderConfirmation = () => {
             <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-8">
               <h2 className="font-serif text-xl text-stone-900 dark:text-stone-50 mb-6">Items Ordered</h2>
               <div className="space-y-4">
-                {order.items.map((item, idx) => (
-                  <div key={idx} className="flex justify-between pb-4 border-b border-stone-200 dark:border-stone-800 last:border-0">
-                    <div>
-                      <p className="font-sans text-stone-900 dark:text-stone-50 font-semibold">
-                        {item.productId?.name || 'Product'}
+                {order.items.map((item, idx) => {
+                  const price = item.price || 
+                    (typeof item.productId?.price === 'string' 
+                      ? parseFloat(item.productId.price.replace(/[₹\s]/g, '')) 
+                      : item.productId?.price) || 
+                    item.productId?.priceNum || 0;
+                  const totalPrice = item.quantity * price;
+                  
+                  return (
+                    <div key={idx} className="flex justify-between pb-4 border-b border-stone-200 dark:border-stone-800 last:border-0">
+                      <div>
+                        <p className="font-sans text-stone-900 dark:text-stone-50 font-semibold">
+                          {item.name || item.productId?.name || 'Product'}
+                        </p>
+                        <p className="font-sans text-stone-500 text-sm">Quantity: {item.quantity}</p>
+                        <p className="font-sans text-stone-600 dark:text-stone-400 text-xs mt-1">₹{price.toLocaleString('en-IN')} each</p>
+                      </div>
+                      <p className="font-serif text-amber-600 font-semibold">
+                        ₹{totalPrice.toLocaleString('en-IN')}
                       </p>
-                      <p className="font-sans text-stone-500 text-sm">Quantity: {item.quantity}</p>
                     </div>
-                    <p className="font-serif text-amber-600 font-semibold">
-                      ₹{(item.quantity * (item.productId?.priceNum || 0)).toLocaleString('en-IN')}
-                    </p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
           )}
@@ -152,7 +209,10 @@ const OrderConfirmation = () => {
               <div className="flex justify-between font-sans">
                 <span className="text-stone-600 dark:text-stone-400">Subtotal</span>
                 <span className="text-stone-900 dark:text-stone-50">
-                  ₹{order.items.reduce((sum, item) => sum + (item.quantity * (item.productId?.priceNum || 0)), 0).toLocaleString('en-IN')}
+                  ₹{order.items.reduce((sum, item) => {
+                    const price = item.price || item.productId?.price || item.productId?.priceNum || 0;
+                    return sum + (item.quantity * price);
+                  }, 0).toLocaleString('en-IN')}
                 </span>
               </div>
               <div className="flex justify-between font-sans">
@@ -175,6 +235,12 @@ const OrderConfirmation = () => {
               className="block text-center bg-amber-500 hover:bg-amber-400 text-stone-900 font-sans font-bold py-3 rounded-lg transition-colors"
             >
               Continue Shopping
+            </Link>
+            <Link
+              to="/order-history"
+              className="block text-center border-2 border-stone-300 text-stone-700 dark:border-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800 font-sans font-bold py-3 rounded-lg transition-colors"
+            >
+              View Order History
             </Link>
             <Link
               to="/favorites"

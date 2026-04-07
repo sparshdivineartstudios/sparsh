@@ -218,8 +218,16 @@ const Products = () => {
     }
     // Sort
     switch (sortBy) {
-      case 'price-asc': list.sort((a, b) => (a.priceNum || 0) - (b.priceNum || 0)); break;
-      case 'price-desc': list.sort((a, b) => (b.priceNum || 0) - (a.priceNum || 0)); break;
+      case 'price-asc': list.sort((a, b) => {
+        const aPrice = typeof a.price === 'string' ? parseFloat(a.price.replace(/[₹\s]/g, '')) : (a.price || a.priceNum || 0);
+        const bPrice = typeof b.price === 'string' ? parseFloat(b.price.replace(/[₹\s]/g, '')) : (b.price || b.priceNum || 0);
+        return aPrice - bPrice;
+      }); break;
+      case 'price-desc': list.sort((a, b) => {
+        const aPrice = typeof a.price === 'string' ? parseFloat(a.price.replace(/[₹\s]/g, '')) : (a.price || a.priceNum || 0);
+        const bPrice = typeof b.price === 'string' ? parseFloat(b.price.replace(/[₹\s]/g, '')) : (b.price || b.priceNum || 0);
+        return bPrice - aPrice;
+      }); break;
       case 'name-asc': list.sort((a, b) => a.name.localeCompare(b.name)); break;
       default: break;
     }

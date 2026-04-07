@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
 
 const CheckoutReview = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { token } = useAuth();
   const { cartItems, shippingDetails, shippingCost, finalTotal } = location.state || {};
   const [loading, setLoading] = useState(false);
   const [editStep, setEditStep] = useState(null);
@@ -20,12 +22,24 @@ const CheckoutReview = () => {
   const handleProceedToPayment = async () => {
     setLoading(true);
     try {
+      const apiUrl = import.meta.env.VITE_API_URL || 'https://home-8zob.onrender.com';
       // Create order on backend
-      const response = await fetch('https://home-8zob.onrender.com/api/orders/create', {
+      const response = await fetch(`${apiUrl}/api/orders/create`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
         body: JSON.stringify({
-          items: cartItems.map(item => ({ productId: item._id, quantity: item.quantity })),
+          items: cartItems.map(item => {
+            const price = typeof item.price === 'string' 
+              ? parseFloat(item.price.replace(/[₹\s]/g, '')) 
+              : (item.price || 0);
+            return {
+              productId: item._id,
+              quantity: item.quantity,
+              price, // Include price so it's stored with the order
+              name: item.name,
+              image: item.image,
+            };
+          }),
           shippingDetails,
           totalAmount: finalTotal,
           notes: shippingDetails.notes,
@@ -69,15 +83,20 @@ const CheckoutReview = () => {
           >
             <h2 className="font-serif text-xl text-stone-900 dark:text-stone-50 mb-6">Order Items</h2>
             <div className="space-y-4">
-              {cartItems.map((item, idx) => (
-                <div key={item._id} className="flex justify-between items-center pb-4 border-b border-stone-200 dark:border-stone-800 last:border-0">
-                  <div>
-                    <p className="font-sans text-stone-900 dark:text-stone-50 font-semibold">{item.name}</p>
-                    <p className="font-sans text-stone-500 text-sm">Qty: {item.quantity}</p>
+              {cartItems.map((item, idx) => {
+                const price = typeof item.price === 'string' 
+                  ? parseFloat(item.price.replace(/[₹\s]/g, '')) 
+                  : (item.price || 0);
+                return (
+                  <div key={item._id} className="flex justify-between items-center pb-4 border-b border-stone-200 dark:border-stone-800 last:border-0">
+                    <div>
+                      <p className="font-sans text-stone-900 dark:text-stone-50 font-semibold">{item.name}</p>
+                      <p className="font-sans text-stone-500 text-sm">Qty: {item.quantity}</p>
+                    </div>
+                    <p className="font-serif text-amber-600 font-semibold">₹{(price * item.quantity).toLocaleString('en-IN')}</p>
                   </div>
-                  <p className="font-serif text-amber-600 font-semibold">₹{(item.priceNum * item.quantity).toLocaleString('en-IN')}</p>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </motion.div>
 
@@ -122,7 +141,12 @@ const CheckoutReview = () => {
           <div className="space-y-3 border-b border-stone-200 dark:border-stone-800 pb-4 mb-4">
             <div className="flex justify-between font-sans">
               <span className="text-stone-600 dark:text-stone-400">Subtotal</span>
-              <span className="text-stone-900 dark:text-stone-50">₹{cartItems.reduce((s, i) => s + (i.priceNum * i.quantity), 0).toLocaleString('en-IN')}</span>
+              <span className="text-stone-900 dark:text-stone-50">₹{cartItems.reduce((s, i) => {
+                const price = typeof i.price === 'string' 
+                  ? parseFloat(i.price.replace(/[₹\s]/g, '')) 
+                  : (i.price || 0);
+                return s + (price * i.quantity);
+              }, 0).toLocaleString('en-IN')}</span>
             </div>
             <div className="flex justify-between font-sans">
               <span className="text-stone-600 dark:text-stone-400">Shipping</span>

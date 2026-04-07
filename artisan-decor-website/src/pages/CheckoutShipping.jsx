@@ -176,12 +176,17 @@ const CheckoutShipping = () => {
         >
           <h3 className="font-serif text-lg text-stone-900 dark:text-stone-50 mb-4">Order Summary</h3>
           <div className="space-y-3 border-b border-stone-200 dark:border-stone-800 pb-4 mb-4">
-            {cartItems.map(item => (
-              <div key={item._id} className="flex justify-between font-sans text-sm">
-                <span className="text-stone-600 dark:text-stone-400">{item.name} x{item.quantity}</span>
-                <span className="text-stone-900 dark:text-stone-50">₹{(item.priceNum * item.quantity).toLocaleString('en-IN')}</span>
-              </div>
-            ))}
+            {cartItems.map(item => {
+              const price = typeof item.price === 'string' 
+                ? parseFloat(item.price.replace(/[₹\s]/g, '')) 
+                : (item.price || 0);
+              return (
+                <div key={item._id} className="flex justify-between font-sans text-sm">
+                  <span className="text-stone-600 dark:text-stone-400">{item.name} x{item.quantity}</span>
+                  <span className="text-stone-900 dark:text-stone-50">₹{(price * item.quantity).toLocaleString('en-IN')}</span>
+                </div>
+              );
+            })}
           </div>
 
           <div className="space-y-3 mb-6">

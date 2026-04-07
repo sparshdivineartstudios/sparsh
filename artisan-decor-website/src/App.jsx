@@ -21,6 +21,8 @@ import CheckoutShipping from './pages/CheckoutShipping';
 import CheckoutReview from './pages/CheckoutReview';
 import CheckoutPayment from './pages/CheckoutPayment';
 import OrderConfirmation from './pages/OrderConfirmation';
+import OrderHistory from './pages/OrderHistory';
+import OrderDetail from './pages/OrderDetail';
 import ScrollToTop from './components/ScrollToTop';
 import CursorGlow from './components/CursorGlow';
 import { ThemeProvider } from './context/ThemeContext';
@@ -67,6 +69,8 @@ function App() {
                 <Route path="/checkout/review" element={<CheckoutReview />} />
                 <Route path="/checkout/payment" element={<CheckoutPayment />} />
                 <Route path="/order-confirmation" element={<OrderConfirmation />} />
+                <Route path="/order-history" element={<OrderHistory />} />
+                <Route path="/order/:orderId" element={<OrderDetail />} />
                 <Route path="/admin/add" element={<AdminAddProduct />} />
                 <Route path="/admin/edit/:id" element={<AdminEditProduct />} />
               </Routes>
