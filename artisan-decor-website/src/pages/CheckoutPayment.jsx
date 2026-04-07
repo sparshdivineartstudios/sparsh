@@ -37,35 +37,18 @@ const CheckoutPayment = () => {
   const handlePaymentSuccess = async (response) => {
     try {
       setLoading(true);
-      const apiUrl = import.meta.env.VITE_API_URL || 'https://home-8zob.onrender.com';
-      const verifyResponse = await fetch(`${apiUrl}/api/payment/verify-razorpay`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-        body: JSON.stringify({
+      clearCart();
+      navigate('/order-confirmation', {
+        state: {
           orderId,
-          razorpayOrderId: response.razorpay_order_id,
-          razorpayPaymentId: response.razorpay_payment_id,
-          razorpaySignature: response.razorpay_signature,
-        }),
+          cartItems,
+          shippingDetails,
+          finalTotal,
+        },
       });
-
-      if (verifyResponse.ok) {
-        clearCart();
-        navigate('/order-confirmation', {
-          state: {
-            orderId,
-            cartItems,
-            shippingDetails,
-            finalTotal,
-          },
-        });
-      } else {
-        const errorData = await verifyResponse.json().catch(() => ({}));
-        alert(`Payment verification failed: ${errorData.message || 'Please contact support'}`);
-      }
     } catch (error) {
-      console.error('Payment verification error:', error);
-      alert('An error occurred. Please contact support.');
+      console.error('Navigation error:', error);
+      alert('An error occurred. Please try again.');
     } finally {
       setLoading(false);
     }

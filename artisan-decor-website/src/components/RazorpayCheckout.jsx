@@ -117,10 +117,12 @@ const RazorpayCheckout = ({
               const errorData = await verifyRes.json().catch(() => ({}));
               console.error('❌ Verification failed:', verifyRes.status, errorData);
               onError?.(`Payment verification failed: ${errorData.message || verifyRes.status}`);
+              onClose();  // ← Close modal on error too
             }
           } catch (error) {
             console.error('Verification error:', error);
             onError?.(error.message);
+            onClose();  // ← Close modal on error too
           }
         },
         modal: {
