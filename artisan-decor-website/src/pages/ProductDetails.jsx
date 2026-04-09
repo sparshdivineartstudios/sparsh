@@ -328,27 +328,78 @@ const StarRating = ({ rating, interactive = false, onRate }) => (
 const ReviewsSection = ({ productId }) => {
   const { isAuthenticated, user } = useAuth();
   const [reviews, setReviews] = useState([]);
+  const [stats, setStats] = useState({ average: 0, count: 0, distribution: { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 } });
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({ rating: 0, title: '', comment: '' });
   const [submitting, setSubmitting] = useState(false);
   const [formErr, setFormErr] = useState('');
   const [formSuccess, setFormSuccess] = useState(false);
+  const [sortBy, setSortBy] = useState('newest');
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [pollInterval, setPollInterval] = useState(null);
+  const [newReviewsCount, setNewReviewsCount] = useState(0);
   const [hasReviewed, setHasReviewed] = useState(false);
+  const [editingReviewId, setEditingReviewId] = useState(null);
+  const [editForm, setEditForm] = useState({ rating: 0, title: '', comment: '' });
 
-  const fetchReviews = () => {
-    axios.get(`${API_URL}/api/reviews/product/${productId}`)
+  const fetchReviews = (pageNum = 1, sort = sortBy) => {
+    axios.get(`${API_URL}/api/reviews/product/${productId}`, {
+      params: { page: pageNum, limit: 10, sort }
+    })
       .then(res => {
-        setReviews(res.data);
-        if (user) setHasReviewed(res.data.some(r => r.user?._id === user._id || r.user?.id === user._id));
+        const { reviews: data, stats: s, pagination } = res.data;
+        setReviews(data);
+        setStats(s);
+        setPage(pagination.page);
+        setTotalPages(pagination.pages);
+        setNewReviewsCount(0);
+        
+        // Check if current user has already reviewed this product
+        if (isAuthenticated && user) {
+          const userReview = data.find(r => r.user._id === user._id || r.user === user._id);
+          setHasReviewed(!!userReview);
+        }
       })
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => { fetchReviews(); }, [productId, user]);
+  // Initial fetch and set up polling
+  useEffect(() => {
+    fetchReviews(1, sortBy);
+    // Poll for new reviews every 10 seconds
+    const interval = setInterval(() => {
+      axios.get(`${API_URL}/api/reviews/product/${productId}`, {
+        params: { page: 1, limit: 10, sort: sortBy }
+      })
+        .then(res => {
+          const newReviewsData = res.data.reviews;
+          // If there are NEW reviews (by comparing first review IDs), show notification
+          if (reviews.length > 0 && newReviewsData.length > 0 && newReviewsData[0]._id !== reviews[0]._id) {
+            setNewReviewsCount(prev => prev + 1);
+          }
+        })
+        .catch(err => console.error('Polling error:', err));
+    }, 10000); // Poll every 10 seconds
+    
+    setPollInterval(interval);
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [productId, user, sortBy]);
 
-  const avgRating = reviews.length > 0
-    ? (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)
-    : null;
+  const handleSortChange = (newSort) => {
+    setSortBy(newSort);
+    setPage(1);
+    fetchReviews(1, newSort);
+  };
+
+  const refreshReviews = () => {
+    setNewReviewsCount(0);
+    fetchReviews(1, sortBy);
+  };
+
+  const avgRating = stats.average || null;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -357,12 +408,29 @@ const ReviewsSection = ({ productId }) => {
     setFormErr('');
     setSubmitting(true);
     try {
-      await axios.post(`${API_URL}/api/reviews/product/${productId}`, form);
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setFormErr('You must be logged in to submit a review');
+        return;
+      }
+      await axios.post(`${API_URL}/api/reviews/product/${productId}`, form, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
       setFormSuccess(true);
       setForm({ rating: 0, title: '', comment: '' });
-      fetchReviews();
+      // Reset success message after 3 seconds
+      setTimeout(() => setFormSuccess(false), 3000);
+      // Refresh reviews
+      setTimeout(() => {
+        setPage(1);
+        fetchReviews(1, sortBy);
+      }, 500);
     } catch (err) {
-      setFormErr(err.response?.data?.message || 'Failed to submit review');
+      console.error('Review submission error:', err.response?.data || err.message);
+      setFormErr(err.response?.data?.message || err.response?.data?.error || 'Failed to submit review');
     } finally {
       setSubmitting(false);
     }
@@ -370,26 +438,131 @@ const ReviewsSection = ({ productId }) => {
 
   const handleDelete = async (reviewId) => {
     try {
-      await axios.delete(`${API_URL}/api/reviews/${reviewId}`);
-      fetchReviews();
-    } catch { }
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setFormErr('You must be logged in to delete a review');
+        return;
+      }
+      await axios.delete(`${API_URL}/api/reviews/${reviewId}`, {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      });
+      fetchReviews(page, sortBy);
+    } catch (err) {
+      console.error('Delete failed:', err.response?.data || err.message);
+      setFormErr(err.response?.data?.message || err.response?.data?.error || 'Failed to delete review');
+    }
+  };
+
+  const handleEdit = (review) => {
+    setEditingReviewId(review._id);
+    setEditForm({ rating: review.rating, title: review.title, comment: review.comment });
+  };
+
+  const handleSaveEdit = async (e) => {
+    e.preventDefault();
+    if (!editForm.rating) { setFormErr('Please select a star rating'); return; }
+    if (editForm.comment.length < 5) { setFormErr('Comment must be at least 5 characters'); return; }
+    setFormErr('');
+    setSubmitting(true);
+    try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setFormErr('You must be logged in to update a review');
+        return;
+      }
+      await axios.put(`${API_URL}/api/reviews/${editingReviewId}`, editForm, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      setFormSuccess(true);
+      setEditingReviewId(null);
+      setEditForm({ rating: 0, title: '', comment: '' });
+      setTimeout(() => setFormSuccess(false), 3000);
+      setTimeout(() => {
+        fetchReviews(page, sortBy);
+      }, 500);
+    } catch (err) {
+      console.error('Review update error:', err.response?.data || err.message);
+      setFormErr(err.response?.data?.message || err.response?.data?.error || 'Failed to update review');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setEditingReviewId(null);
+    setEditForm({ rating: 0, title: '', comment: '' });
+    setFormErr('');
   };
 
   return (
     <div className="mt-14 border-t border-stone-200 dark:border-stone-800 pt-10">
       {/* Header */}
-      <div className="flex items-end justify-between mb-8">
+      <div className="flex items-end justify-between mb-2">
         <div>
           <p className="font-sans text-xs uppercase tracking-widest text-amber-600 dark:text-amber-500 mb-1">Customer Feedback</p>
           <h2 className="font-serif text-3xl text-stone-900 dark:text-stone-50">
             Reviews {avgRating && <span className="text-amber-500 text-2xl ml-2">★ {avgRating}</span>}
           </h2>
         </div>
-        <span className="font-sans text-xs text-stone-500">{reviews.length} review{reviews.length !== 1 ? 's' : ''}</span>
+        <span className="font-sans text-xs text-stone-500">{stats.count} review{stats.count !== 1 ? 's' : ''}</span>
       </div>
 
-      {/* Review form */}
-      {isAuthenticated && !hasReviewed && !formSuccess && (
+      {/* New Reviews Notification */}
+      {newReviewsCount > 0 && (
+        <motion.button
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          onClick={refreshReviews}
+          className="w-full mb-6 bg-amber-50 dark:bg-amber-900/30 border border-amber-200 dark:border-amber-700 rounded-xl py-2 px-4 text-amber-700 dark:text-amber-400 font-sans text-sm hover:bg-amber-100 dark:hover:bg-amber-900/50 transition-colors flex items-center justify-center gap-2"
+        >
+          <span className="material-symbols-outlined text-[16px]">refresh</span>
+          {newReviewsCount} new review{newReviewsCount !== 1 ? 's' : ''} · Click to load
+        </motion.button>
+      )}
+
+      {/* Star Distribution (if reviews exist) */}
+      {stats.count > 0 && (
+        <div className="mb-8 bg-stone-50 dark:bg-stone-900/50 rounded-2xl p-6">
+          <p className="font-sans text-xs font-semibold text-stone-600 dark:text-stone-400 uppercase tracking-widest mb-4">Rating Breakdown</p>
+          <div className="space-y-3">
+            {[5, 4, 3, 2, 1].map(stars => {
+              const count = stats.distribution?.[stars] || 0;
+              const percent = stats.count > 0 ? (count / stats.count) * 100 : 0;
+              return (
+                <motion.div
+                  key={stars}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: (5 - stars) * 0.05 }}
+                  className="flex items-center gap-3"
+                >
+                  <div className="flex items-center gap-1 min-w-[60px]">
+                    <span className="font-sans text-xs font-semibold text-stone-600 dark:text-stone-400">{stars}</span>
+                    <span className="material-symbols-outlined text-[14px] text-amber-500">star</span>
+                  </div>
+                  <div className="flex-1 bg-stone-200 dark:bg-stone-800 rounded-full h-2 overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: `${percent}%` }}
+                      transition={{ duration: 0.6, delay: (5 - stars) * 0.05 }}
+                      className="h-full bg-amber-500"
+                    />
+                  </div>
+                  <span className="font-sans text-xs text-stone-500 dark:text-stone-500 min-w-[40px] text-right">{count}</span>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {/* Review form for create/edit */}
+      {isAuthenticated && !editingReviewId && !hasReviewed && (
         <motion.form
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -440,6 +613,86 @@ const ReviewsSection = ({ productId }) => {
         </motion.form>
       )}
 
+      {/* Edit form */}
+      {editingReviewId && (
+        <motion.form
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          onSubmit={handleSaveEdit}
+          className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl p-6 mb-8"
+        >
+          <div className="flex items-center justify-between mb-4">
+            <p className="font-sans text-sm font-semibold text-stone-700 dark:text-stone-300 flex items-center gap-2">
+              <span className="material-symbols-outlined text-amber-600">edit</span>
+              Edit Your Review
+            </p>
+            <button
+              type="button"
+              onClick={handleCancelEdit}
+              className="text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 transition-colors"
+            >
+              <span className="material-symbols-outlined text-[18px]">close</span>
+            </button>
+          </div>
+
+          {formErr && (
+            <p className="font-sans text-xs text-red-500 mb-3">{formErr}</p>
+          )}
+
+          <div className="mb-4">
+            <p className="font-sans text-xs text-stone-500 uppercase tracking-widest mb-2">Rating *</p>
+            <StarRating rating={editForm.rating} interactive onRate={r => setEditForm(f => ({ ...f, rating: r }))} />
+          </div>
+
+          <div className="mb-3">
+            <input
+              type="text"
+              placeholder="Review title (optional)"
+              value={editForm.title}
+              onChange={e => setEditForm(f => ({ ...f, title: e.target.value }))}
+              maxLength={100}
+              className="w-full px-4 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-50 font-sans text-sm focus:outline-none focus:border-amber-500 transition-colors"
+            />
+          </div>
+
+          <div className="mb-4">
+            <textarea
+              required
+              rows={3}
+              placeholder="Update your experience..."
+              value={editForm.comment}
+              onChange={e => setEditForm(f => ({ ...f, comment: e.target.value }))}
+              maxLength={1000}
+              className="w-full px-4 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 bg-white dark:bg-stone-800 text-stone-900 dark:text-stone-50 font-sans text-sm focus:outline-none focus:border-amber-500 transition-colors resize-none"
+            />
+          </div>
+
+          <div className="flex gap-2">
+            <button
+              type="submit"
+              disabled={submitting}
+              className="flex-1 bg-amber-600 dark:bg-amber-500 text-white dark:text-stone-900 px-6 py-2.5 rounded-xl font-sans text-xs uppercase tracking-widest font-bold hover:bg-amber-700 dark:hover:bg-amber-400 transition-colors disabled:opacity-60 flex items-center justify-center gap-2"
+            >
+              {submitting ? <><span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" /> Saving…</> : 'Save Changes'}
+            </button>
+            <button
+              type="button"
+              onClick={handleCancelEdit}
+              className="px-6 py-2.5 rounded-xl border border-stone-200 dark:border-stone-700 text-stone-700 dark:text-stone-300 font-sans text-xs uppercase tracking-widest font-bold hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </motion.form>
+      )}
+
+      {isAuthenticated && hasReviewed && !editingReviewId && (
+        <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-2xl p-5 mb-8 flex items-center gap-3">
+          <span className="material-symbols-outlined text-amber-600">done</span>
+          <p className="font-sans text-sm text-amber-900 dark:text-amber-200">You've already reviewed this product. You can edit your review below.</p>
+        </div>
+      )}
+
       {!isAuthenticated && (
         <div className="bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-5 mb-8 flex items-center gap-3">
           <span className="material-symbols-outlined text-stone-400">lock</span>
@@ -448,9 +701,39 @@ const ReviewsSection = ({ productId }) => {
       )}
 
       {formSuccess && (
-        <div className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-2xl p-4 mb-8 flex items-center gap-2 text-green-700 dark:text-green-400 font-sans text-sm">
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -10 }}
+          className="bg-green-50 dark:bg-green-950/30 border border-green-200 dark:border-green-800 rounded-2xl p-4 mb-8 flex items-center gap-2 text-green-700 dark:text-green-400 font-sans text-sm"
+        >
           <span className="material-symbols-outlined text-[18px]">check_circle</span>
           Thank you! Your review has been posted.
+        </motion.div>
+      )}
+
+      {/* Sort Controls */}
+      {reviews.length > 0 && (
+        <div className="mb-6 flex items-center justify-between">
+          <p className="font-sans text-xs text-stone-500 uppercase tracking-widest">Sort by</p>
+          <div className="flex gap-2">
+            {[
+              { value: 'newest', label: 'Newest' },
+              { value: 'highest', label: 'Highest Rated' }
+            ].map(opt => (
+              <button
+                key={opt.value}
+                onClick={() => handleSortChange(opt.value)}
+                className={`px-3 py-1.5 rounded-full font-sans text-xs font-semibold transition-colors ${
+                  sortBy === opt.value
+                    ? 'bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-900'
+                    : 'bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-300 dark:hover:bg-stone-700'
+                }`}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
         </div>
       )}
 
@@ -468,45 +751,106 @@ const ReviewsSection = ({ productId }) => {
           <p className="font-sans text-sm text-stone-400 mt-1">Be the first to share your experience!</p>
         </div>
       ) : (
-        <div className="space-y-5">
-          {reviews.map((review, idx) => (
-            <motion.div
-              key={review._id}
-              initial={{ opacity: 0, y: 15 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: idx * 0.07 }}
-              className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 relative"
-            >
-              <div className="flex items-start justify-between mb-3">
-                <div>
-                  <div className="flex items-center gap-2 mb-1.5">
-                    <div className="w-7 h-7 bg-amber-500/20 rounded-full flex items-center justify-center">
-                      <span className="font-serif text-amber-600 text-sm font-bold">{review.user?.name?.[0]?.toUpperCase() || '?'}</span>
+        <>
+          <div className="space-y-5 mb-8">
+            {reviews.map((review, idx) => (
+              <motion.div
+                key={review._id}
+                initial={{ opacity: 0, y: 15 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: idx * 0.07 }}
+                className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-6 relative hover:border-amber-200 dark:hover:border-amber-800 transition-colors"
+              >
+                <div className="flex items-start justify-between mb-3">
+                  <div>
+                    <div className="flex items-center gap-2 mb-1.5">
+                      <motion.div
+                        whileHover={{ scale: 1.1 }}
+                        className="w-7 h-7 bg-amber-500/20 rounded-full flex items-center justify-center"
+                      >
+                        <span className="font-serif text-amber-600 text-sm font-bold">{review.user?.name?.[0]?.toUpperCase() || '?'}</span>
+                      </motion.div>
+                      <span className="font-sans text-sm font-semibold text-stone-800 dark:text-stone-200">{review.user?.name || 'Anonymous'}</span>
+                      <span className="font-sans text-[10px] text-stone-400">·</span>
+                      <span className="font-sans text-[10px] text-stone-400">
+                        {new Date(review.updatedAt || review.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+                        {review.updatedAt && review.updatedAt !== review.createdAt && (
+                          <span className="ml-1 text-amber-600 dark:text-amber-400 italic">· edited</span>
+                        )}
+                      </span>
                     </div>
-                    <span className="font-sans text-sm font-semibold text-stone-800 dark:text-stone-200">{review.user?.name || 'Anonymous'}</span>
-                    <span className="font-sans text-[10px] text-stone-400">·</span>
-                    <span className="font-sans text-[10px] text-stone-400">{new Date(review.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                    <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: idx * 0.1 }}
+                    >
+                      <StarRating rating={review.rating} />
+                    </motion.div>
                   </div>
-                  <StarRating rating={review.rating} />
+                  {/* Edit & Delete buttons for own review or admin */}
+                  {user && (review.user?._id === user._id || review.user?.id === user._id) && (
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEdit(review)}
+                        className="text-stone-400 hover:text-amber-600 transition-colors"
+                        title="Edit review"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">edit</span>
+                      </button>
+                      <button
+                        onClick={() => handleDelete(review._id)}
+                        className="text-stone-400 hover:text-red-500 transition-colors"
+                        title="Delete review"
+                      >
+                        <span className="material-symbols-outlined text-[18px]">delete</span>
+                      </button>
+                    </div>
+                  )}
                 </div>
-                {/* Delete button for own review or admin */}
-                {user && (review.user?._id === user._id || review.user?.id === user._id) && (
-                  <button
-                    onClick={() => handleDelete(review._id)}
-                    className="text-stone-400 hover:text-red-500 transition-colors"
-                    title="Delete review"
-                  >
-                    <span className="material-symbols-outlined text-[18px]">delete</span>
-                  </button>
+                {review.title && (
+                  <p className="font-serif text-base font-semibold text-stone-900 dark:text-stone-50 mb-1">{review.title}</p>
                 )}
+                <p className="font-sans text-sm text-stone-600 dark:text-stone-400 leading-relaxed">{review.comment}</p>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-center gap-2 pt-6 border-t border-stone-200 dark:border-stone-800">
+              <button
+                onClick={() => { setPage(p => Math.max(1, p - 1)); fetchReviews(Math.max(1, page - 1), sortBy); }}
+                disabled={page === 1}
+                className="p-2 rounded-lg border border-stone-200 dark:border-stone-800 hover:bg-stone-100 dark:hover:bg-stone-800 disabled:opacity-40 transition-colors"
+              >
+                <span className="material-symbols-outlined text-[18px]">chevron_left</span>
+              </button>
+              <div className="flex gap-1">
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                  <motion.button
+                    key={p}
+                    onClick={() => { setPage(p); fetchReviews(p, sortBy); }}
+                    animate={{ scale: page === p ? 1.1 : 1 }}
+                    className={`min-w-[32px] h-8 rounded-lg font-sans text-xs font-semibold transition-colors ${
+                      page === p
+                        ? 'bg-stone-900 dark:bg-amber-500 text-white dark:text-stone-900'
+                        : 'bg-stone-100 dark:bg-stone-800 text-stone-700 dark:text-stone-300 hover:bg-stone-200 dark:hover:bg-stone-700'
+                    }`}
+                  >
+                    {p}
+                  </motion.button>
+                ))}
               </div>
-              {review.title && (
-                <p className="font-serif text-base font-semibold text-stone-900 dark:text-stone-50 mb-1">{review.title}</p>
-              )}
-              <p className="font-sans text-sm text-stone-600 dark:text-stone-400 leading-relaxed">{review.comment}</p>
-            </motion.div>
-          ))}
-        </div>
+              <button
+                onClick={() => { setPage(p => Math.min(totalPages, p + 1)); fetchReviews(Math.min(totalPages, page + 1), sortBy); }}
+                disabled={page === totalPages}
+                className="p-2 rounded-lg border border-stone-200 dark:border-stone-800 hover:bg-stone-100 dark:hover:bg-stone-800 disabled:opacity-40 transition-colors"
+              >
+                <span className="material-symbols-outlined text-[18px]">chevron_right</span>
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

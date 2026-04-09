@@ -30,6 +30,12 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const refreshUser = async () => {
+    if (token) {
+      await fetchUser();
+    }
+  };
+
   const login = async (email, password) => {
     const res = await axios.post(`${API_URL}/api/auth/login`, { email, password });
     setToken(res.data.token);
@@ -44,8 +50,9 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, isAuthenticated: !!token, isAdmin: !!user?.isAdmin }}>
+    <AuthContext.Provider value={{ user, token, login, logout, refreshUser, isAuthenticated: !!token, isAdmin: !!user?.isAdmin }}>
       {children}
     </AuthContext.Provider>
   );
 };
+

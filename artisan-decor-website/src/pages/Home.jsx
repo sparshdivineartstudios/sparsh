@@ -3,6 +3,9 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import MagneticButton from '../components/MagneticButton';
+import { API_URL } from '../utils/apiConfig';
+import FeaturedReviews from '../components/FeaturedReviews';
+import Newsletter from '../components/Newsletter';
 
 /* ─── Drive URL → reliable thumbnail URL ─── */
 function getDriveFileId(url = '') {
@@ -111,7 +114,7 @@ const Home = () => {
   const [reviews, setReviews] = useState([]);
 
   useEffect(() => {
-    axios.get('https://home-8zob.onrender.com/api/products')
+    axios.get(`${API_URL}/api/products`)
       .then(res => {
         const data = res.data || [];
         setAllProducts(data);
@@ -122,8 +125,12 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    axios.get('https://home-8zob.onrender.com/api/reviews')
-      .then(res => setReviews(res.data || []))
+    axios.get(`${API_URL}/api/reviews`, { params: { page: 1, limit: 6, sort: 'newest' } })
+      .then(res => {
+        // Handle paginated response
+        const reviewsData = res.data.reviews || res.data || [];
+        setReviews(reviewsData);
+      })
       .catch(() => { });
   }, []);
 
@@ -405,6 +412,9 @@ const Home = () => {
         )}
       </section>
 
+      {/* ── 4a. FEATURED REVIEWS CAROUSEL ── */}
+      <FeaturedReviews />
+
       {/* ── 5. FULL-WIDTH PARALLAX STORY SECTION ── */}
       <section ref={aboutRef} className="relative flex flex-col md:flex-row min-h-[600px] overflow-hidden mt-0">
         <div className="w-full md:w-1/2 relative h-[400px] md:h-auto overflow-hidden">
@@ -601,74 +611,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ── 9. TESTIMONIALS ── */}
-      <section className="py-28 px-8 max-w-7xl mx-auto">
-        <div className="text-center mb-16">
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="font-sans text-amber-600 dark:text-amber-500 uppercase tracking-widest text-xs font-semibold mb-3"
-          >
-            Loved by Many
-          </motion.p>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="font-serif text-4xl md:text-5xl text-stone-900 dark:text-stone-50"
-          >
-            Words from Our Collectors
-          </motion.h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {[
-            {
-              quote: 'I ordered a resin tray as a gift and the recipient cried. The colours, the texture — it felt like holding liquid gold. Absolute magic.',
-              name: 'Priya Malhotra',
-              location: 'Mumbai',
-              product: 'Resin Art Tray',
-            },
-            {
-              quote: 'The concrete candle holder I bought is the first thing guests notice when they walk in. It\'s rugged but elegant — exactly what my living room needed.',
-              name: 'Arjun Sharma',
-              location: 'Delhi',
-              product: 'Concrete Candle Holder',
-            },
-            {
-              quote: 'Ordered a custom soy candle with my mum\'s favourite scent in a concrete vessel. She said it\'s the most thoughtful gift she\'s ever received. Worth every rupee.',
-              name: 'Kavya R.',
-              location: 'Bangalore',
-              product: 'Custom Soy Wax Candle',
-            },
-          ].map((t, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: idx * 0.15 }}
-              className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl p-8 flex flex-col justify-between shadow-sm hover:shadow-md hover:border-amber-500/50 transition-all duration-300"
-            >
-              <div>
-                <div className="flex gap-1 mb-5">
-                  {[...Array(5)].map((_, i) => (
-                    <span key={i} className="text-amber-500 text-sm">★</span>
-                  ))}
-                </div>
-                <p className="font-sans text-stone-600 dark:text-stone-400 leading-relaxed text-sm italic mb-6">"{t.quote}"</p>
-              </div>
-              <div className="border-t border-stone-100 dark:border-stone-800 pt-5">
-                <p className="font-serif text-stone-900 dark:text-stone-50 font-semibold">{t.name}</p>
-                <p className="font-sans text-xs text-stone-400 mt-1">{t.location} · <span className="text-amber-600">{t.product}</span></p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </section>
-
-      {/* ── 10. INSTAGRAM / VISUAL GRID ── */}
+      {/* ── 9. INSTAGRAM / VISUAL GRID ── */}
       <section className="py-16 px-8 max-w-7xl mx-auto">
         <div className="text-center mb-10">
           <motion.p
@@ -719,28 +662,28 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ── 11. COMMUNITY REVIEWS FEED ── */}
-      {reviews.length > 0 && (
-        <section className="py-24 px-8 max-w-7xl mx-auto">
-          <div className="text-center mb-14">
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="font-sans text-amber-600 dark:text-amber-500 uppercase tracking-widest text-xs font-semibold mb-3"
-            >
-              Community
-            </motion.p>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="font-serif text-4xl md:text-5xl text-stone-900 dark:text-stone-50"
-            >
-              From Our Collectors
-            </motion.h2>
-          </div>
+      {/* ── 10. COMMUNITY REVIEWS FEED (DYNAMIC) ── */}
+      <section className="py-24 px-8 max-w-7xl mx-auto">
+        <div className="text-center mb-14">
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="font-sans text-amber-600 dark:text-amber-500 uppercase tracking-widest text-xs font-semibold mb-3"
+          >
+            Community
+          </motion.p>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.1 }}
+            className="font-serif text-4xl md:text-5xl text-stone-900 dark:text-stone-50"
+          >
+            From Our Collectors
+          </motion.h2>
+        </div>
+        {reviews.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {reviews.slice(0, 6).map((review, idx) => (
               <motion.div
@@ -784,60 +727,17 @@ const Home = () => {
               </motion.div>
             ))}
           </div>
-        </section>
-      )}
-
-      {/* ── 12. NEWSLETTER ── */}
-      <section className="py-20 px-8 bg-stone-100 dark:bg-stone-900/50">
-        <div className="max-w-2xl mx-auto text-center">
-          <motion.p
-            initial={{ opacity: 0, y: 15 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="font-sans text-amber-600 dark:text-amber-500 uppercase tracking-widest text-xs font-semibold mb-3"
-          >
-            Join the Studio
-          </motion.p>
-          <motion.h2
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.1 }}
-            className="font-serif text-4xl text-stone-900 dark:text-stone-50 mb-4"
-          >
-            Get Early Access to New Pieces
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0 }}
-            whileInView={{ opacity: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-            className="font-sans text-stone-500 dark:text-stone-400 text-sm mb-8 leading-relaxed"
-          >
-            Be the first to know when new resin art, candles &amp; concrete pieces drop. No spam — just art, stories, and the occasional behind-the-scenes peek.
-          </motion.p>
-          <motion.form
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.3 }}
-            className="flex flex-col sm:flex-row gap-3"
-            onSubmit={e => e.preventDefault()}
-          >
-            <input
-              type="email"
-              placeholder="your@email.com"
-              className="flex-1 bg-white dark:bg-stone-900 border border-stone-300 dark:border-stone-700 rounded-sm px-5 py-4 text-sm font-sans focus:outline-none focus:border-amber-500 transition-colors text-stone-900 dark:text-stone-50 placeholder:text-stone-400"
-            />
-            <button
-              type="submit"
-              className="bg-amber-500 hover:bg-amber-400 text-stone-900 px-8 py-4 font-sans uppercase tracking-widest text-xs font-bold transition-colors rounded-sm whitespace-nowrap"
-            >
-              Subscribe
-            </button>
-          </motion.form>
-        </div>
+        ) : (
+          <div className="text-center py-16">
+            <span className="material-symbols-outlined text-6xl text-stone-300 dark:text-stone-700 block mb-4">rate_review</span>
+            <p className="font-serif text-2xl text-stone-400 dark:text-stone-600 mb-2">No reviews yet</p>
+            <p className="font-sans text-stone-500 dark:text-stone-400">Be the first to share your experience with one of our pieces!</p>
+          </div>
+        )}
       </section>
+
+      {/* ── 11. NEWSLETTER ── */}
+      <Newsletter />
 
       {/* ── 12. CTA SECTION ── */}
       <section className="py-32 px-8 text-center max-w-4xl mx-auto">
