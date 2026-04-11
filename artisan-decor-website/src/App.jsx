@@ -9,7 +9,7 @@ import ProductDetails from './pages/ProductDetails';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Login from './pages/Login';
-import EmailVerificationRegister from './components/EmailVerificationRegister';
+import Register from './pages/Register';
 import Favorites from './pages/Favorites';
 import AdminAddProduct from './pages/AdminAddProduct';
 import AdminEditProduct from './pages/AdminEditProduct';
@@ -59,7 +59,7 @@ function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<EmailVerificationRegister />} />
+                <Route path="/register" element={<Register />} />
                 <Route path="/favorites" element={<Favorites />} />
                 <Route path="/shipping-policy" element={<ShippingPolicy />} />
                 <Route path="/care-instructions" element={<CareInstructions />} />
