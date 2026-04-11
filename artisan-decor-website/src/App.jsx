@@ -24,8 +24,11 @@ import OrderConfirmation from './pages/OrderConfirmation';
 import OrderHistory from './pages/OrderHistory';
 import OrderDetail from './pages/OrderDetail';
 import Account from './pages/Account';
+import Privacy from './pages/Privacy';
+import NotFound from './pages/NotFound';
 import ScrollToTop from './components/ScrollToTop';
 import CursorGlow from './components/CursorGlow';
+import PrivateRoute from './components/PrivateRoute';
 import { ThemeProvider } from './context/ThemeContext';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
@@ -61,8 +64,9 @@ function App() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
-                <Route path="/account" element={<Account />} />
-                <Route path="/favorites" element={<Favorites />} />
+                <Route path="/account" element={<PrivateRoute><Account /></PrivateRoute>} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/favorites" element={<PrivateRoute><Favorites /></PrivateRoute>} />
                 <Route path="/shipping-policy" element={<ShippingPolicy />} />
                 <Route path="/care-instructions" element={<CareInstructions />} />
                 <Route path="/returns-refunds" element={<ReturnsRefunds />} />
@@ -73,8 +77,9 @@ function App() {
                 <Route path="/order-confirmation" element={<OrderConfirmation />} />
                 <Route path="/order-history" element={<OrderHistory />} />
                 <Route path="/order/:orderId" element={<OrderDetail />} />
-                <Route path="/admin/add" element={<AdminAddProduct />} />
-                <Route path="/admin/edit/:id" element={<AdminEditProduct />} />
+                <Route path="/admin/add" element={<PrivateRoute><AdminAddProduct /></PrivateRoute>} />
+                <Route path="/admin/edit/:id" element={<PrivateRoute><AdminEditProduct /></PrivateRoute>} />
+                <Route path="*" element={<NotFound />} />
               </Routes>
               <Footer />
             </div>

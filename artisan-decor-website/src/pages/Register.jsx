@@ -39,8 +39,15 @@ const Register = () => {
       if (remaining <= 0) {
         setOtpExpiry(null);
         clearInterval(timer);
+      } else {
+        // Force a re-render by using a dummy state trigger
+        // This ensures the timer display updates every second
+        setOtpExpiry(prev => {
+          if (prev) return new Date(prev.getTime()); // Return new Date instance to trigger re-render
+          return prev;
+        });
       }
-    }, 1000);
+    }, 500); // Update twice per second for smooth display
 
     return () => clearInterval(timer);
   }, [otpExpiry]);

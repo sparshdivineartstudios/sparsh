@@ -25,14 +25,20 @@ const Account = () => {
         setLoading(true);
         await refreshUser();
         
-        // Fetch user's orders
-        const ordersResponse = await axios.get(`${API_URL}/api/orders/my-orders`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setOrders(ordersResponse.data.orders || []);
+        // Try to fetch user's orders, but don't block if it fails
+        try {
+          const ordersResponse = await axios.get(`${API_URL}/api/orders/my-orders`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          setOrders(ordersResponse.data.orders || []);
+        } catch (ordersErr) {
+          console.warn('Orders endpoint not available:', ordersErr);
+          // Don't show error for missing orders endpoint, just set empty array
+          setOrders([]);
+        }
       } catch (err) {
-        console.error('Error fetching data:', err);
-        setError('Failed to load account data');
+        console.error('Error fetching user data:', err);
+        // Still show profile even if orders fail
       } finally {
         setLoading(false);
       }
