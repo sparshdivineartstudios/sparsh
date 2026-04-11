@@ -133,7 +133,7 @@ const EmailVerificationRegister = () => {
       );
 
       if (response.data.success) {
-        setMessage('✅ New code sent! Check your email.');
+        setMessage('New code sent! Check your email.');
         setTimer(60);
       }
     } catch (err) {
