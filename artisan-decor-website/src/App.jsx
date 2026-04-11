@@ -23,6 +23,7 @@ import CheckoutPayment from './pages/CheckoutPayment';
 import OrderConfirmation from './pages/OrderConfirmation';
 import OrderHistory from './pages/OrderHistory';
 import OrderDetail from './pages/OrderDetail';
+import Account from './pages/Account';
 import ScrollToTop from './components/ScrollToTop';
 import CursorGlow from './components/CursorGlow';
 import { ThemeProvider } from './context/ThemeContext';
@@ -60,6 +61,7 @@ function App() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/account" element={<Account />} />
                 <Route path="/favorites" element={<Favorites />} />
                 <Route path="/shipping-policy" element={<ShippingPolicy />} />
                 <Route path="/care-instructions" element={<CareInstructions />} />

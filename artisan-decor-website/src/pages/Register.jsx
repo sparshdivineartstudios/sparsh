@@ -97,7 +97,7 @@ const Register = () => {
 
       if (response.data.success) {
         setOtpSent(true);
-        setOtpExpiry(new Date(Date.now() + 15 * 60 * 1000)); // 15 minutes
+        setOtpExpiry(new Date(Date.now() + 2 * 60 * 1000)); // 2 minutes
         setStep(2);
         setError('');
         // Save password to browser if checkbox is selected
@@ -182,7 +182,7 @@ const Register = () => {
 
       if (response.data.success) {
         setOtp(['', '', '', '', '', '']);
-        setOtpExpiry(new Date(Date.now() + 15 * 60 * 1000));
+        setOtpExpiry(new Date(Date.now() + 2 * 60 * 1000)); // 2 minutes
         document.getElementById('otp-0')?.focus();
       }
     } catch (err) {
@@ -201,11 +201,11 @@ const Register = () => {
   };
 
   return (
-    <main className="min-h-screen bg-gradient-to-br from-stone-950 via-stone-900 to-stone-950 flex items-center justify-center py-12 px-4 md:px-8">
+    <main className="min-h-screen bg-stone-50 dark:bg-stone-950 flex items-center justify-center pt-32 pb-12 px-4">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-amber-600 opacity-5 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-amber-600 opacity-5 rounded-full blur-3xl"></div>
+        <div className="absolute top-0 right-0 w-96 h-96 bg-amber-600 dark:opacity-5 opacity-[0.02] rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-amber-600 dark:opacity-5 opacity-[0.02] rounded-full blur-3xl"></div>
       </div>
 
       <motion.div
@@ -215,24 +215,24 @@ const Register = () => {
         className="w-full max-w-md relative z-10"
       >
         {/* Main Card */}
-        <div className="bg-gradient-to-b from-stone-900/80 to-stone-950/80 backdrop-blur-xl border border-stone-800/60 rounded-xl p-8 md:p-10 shadow-2xl">
+        <div className="bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-lg p-8 shadow-sm">
           {/* Header Progress */}
           <div className="flex justify-between items-center mb-8">
             <div className="flex gap-2">
               <motion.div
                 className={`h-1.5 flex-1 rounded-full transition-all ${
-                  step >= 1 ? 'bg-amber-600' : 'bg-stone-700'
+                  step >= 1 ? 'bg-amber-600' : 'bg-stone-300 dark:bg-stone-700'
                 }`}
                 layoutId="step1"
               />
               <motion.div
                 className={`h-1.5 flex-1 rounded-full transition-all ${
-                  step >= 2 ? 'bg-amber-600' : 'bg-stone-700'
+                  step >= 2 ? 'bg-amber-600' : 'bg-stone-300 dark:bg-stone-700'
                 }`}
                 layoutId="step2"
               />
             </div>
-            <span className="text-xs text-stone-400 ml-4 font-medium">Step {step}/2</span>
+            <span className="text-xs text-stone-600 dark:text-stone-400 ml-4 font-medium">Step {step}/2</span>
           </div>
 
           <AnimatePresence mode="wait">
@@ -246,10 +246,10 @@ const Register = () => {
                 transition={{ duration: 0.4 }}
               >
                 <div className="mb-8">
-                  <h2 className="font-serif text-2xl md:text-3xl text-stone-50 font-medium mb-2">
+                  <h2 className="font-serif text-3xl text-stone-900 dark:text-stone-50 font-light mb-2">
                     Create Your Account
                   </h2>
-                  <p className="text-sm text-stone-400">
+                  <p className="text-sm text-stone-600 dark:text-stone-400">
                     Join our community of design enthusiasts
                   </p>
                 </div>
@@ -258,16 +258,16 @@ const Register = () => {
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mb-6 p-3 bg-red-500/15 border border-red-500/30 rounded-lg text-red-300 text-sm font-medium"
+                    className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-200 text-sm font-medium"
                   >
                     {error}
                   </motion.div>
                 )}
 
-                <form onSubmit={handleStep1Submit} className="space-y-4">
+                <form onSubmit={handleStep1Submit} className="space-y-4 mt-6">
                   {/* Username */}
                   <div>
-                    <label className="block text-xs font-semibold text-stone-300 mb-2 uppercase tracking-wide">
+                    <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-2 uppercase tracking-wide">
                       Username
                     </label>
                     <input
@@ -276,13 +276,13 @@ const Register = () => {
                       onChange={(e) => setUsername(e.target.value)}
                       placeholder="choose_your_handle"
                       disabled={loading}
-                      className="w-full bg-stone-950/40 border border-stone-700/60 hover:border-stone-600/60 rounded-lg px-4 py-3 text-sm text-stone-50 placeholder-stone-500 focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600/50 transition-all disabled:opacity-50"
+                      className="w-full bg-stone-50 dark:bg-stone-950/40 border border-stone-200 dark:border-stone-700/60 hover:border-stone-300 dark:hover:border-stone-600/60 rounded-lg px-4 py-3 text-sm text-stone-900 dark:text-stone-50 placeholder-stone-500 focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600/50 transition-all disabled:opacity-50"
                     />
                   </div>
 
                   {/* Full Name */}
                   <div>
-                    <label className="block text-xs font-semibold text-stone-300 mb-2 uppercase tracking-wide">
+                    <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-2 uppercase tracking-wide">
                       Full Name
                     </label>
                     <input
@@ -291,13 +291,13 @@ const Register = () => {
                       onChange={(e) => setFullName(e.target.value)}
                       placeholder="Your full name"
                       disabled={loading}
-                      className="w-full bg-stone-950/40 border border-stone-700/60 hover:border-stone-600/60 rounded-lg px-4 py-3 text-sm text-stone-50 placeholder-stone-500 focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600/50 transition-all disabled:opacity-50"
+                      className="w-full bg-stone-50 dark:bg-stone-950/40 border border-stone-200 dark:border-stone-700/60 hover:border-stone-300 dark:hover:border-stone-600/60 rounded-lg px-4 py-3 text-sm text-stone-900 dark:text-stone-50 placeholder-stone-500 focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600/50 transition-all disabled:opacity-50"
                     />
                   </div>
 
                   {/* Email */}
                   <div>
-                    <label className="block text-xs font-semibold text-stone-300 mb-2 uppercase tracking-wide">
+                    <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-2 uppercase tracking-wide">
                       Email Address
                     </label>
                     <input
@@ -306,13 +306,13 @@ const Register = () => {
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="you@example.com"
                       disabled={loading}
-                      className="w-full bg-stone-950/40 border border-stone-700/60 hover:border-stone-600/60 rounded-lg px-4 py-3 text-sm text-stone-50 placeholder-stone-500 focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600/50 transition-all disabled:opacity-50"
+                      className="w-full bg-stone-50 dark:bg-stone-950/40 border border-stone-200 dark:border-stone-700/60 hover:border-stone-300 dark:hover:border-stone-600/60 rounded-lg px-4 py-3 text-sm text-stone-900 dark:text-stone-50 placeholder-stone-500 focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600/50 transition-all disabled:opacity-50"
                     />
                   </div>
 
                   {/* Password */}
                   <div>
-                    <label className="block text-xs font-semibold text-stone-300 mb-2 uppercase tracking-wide">
+                    <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-2 uppercase tracking-wide">
                       Password
                     </label>
                     <div className="relative">
@@ -322,12 +322,12 @@ const Register = () => {
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="At least 8 characters"
                         disabled={loading}
-                        className="w-full bg-stone-950/40 border border-stone-700/60 hover:border-stone-600/60 rounded-lg px-4 py-3 pr-10 text-sm text-stone-50 placeholder-stone-500 focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600/50 transition-all disabled:opacity-50"
+                        className="w-full bg-stone-50 dark:bg-stone-950/40 border border-stone-200 dark:border-stone-700/60 hover:border-stone-300 dark:hover:border-stone-600/60 rounded-lg px-4 py-3 pr-10 text-sm text-stone-900 dark:text-stone-50 placeholder-stone-500 focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600/50 transition-all disabled:opacity-50"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-300 transition-colors"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 dark:hover:text-stone-300 transition-colors"
                         tabIndex="-1"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -343,7 +343,7 @@ const Register = () => {
 
                   {/* Confirm Password */}
                   <div>
-                    <label className="block text-xs font-semibold text-stone-300 mb-2 uppercase tracking-wide">
+                    <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-2 uppercase tracking-wide">
                       Confirm Password
                     </label>
                     <div className="relative">
@@ -353,12 +353,12 @@ const Register = () => {
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         placeholder="Re-enter your password"
                         disabled={loading}
-                        className="w-full bg-stone-950/40 border border-stone-700/60 hover:border-stone-600/60 rounded-lg px-4 py-3 pr-10 text-sm text-stone-50 placeholder-stone-500 focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600/50 transition-all disabled:opacity-50"
+                        className="w-full bg-stone-50 dark:bg-stone-950/40 border border-stone-200 dark:border-stone-700/60 hover:border-stone-300 dark:hover:border-stone-600/60 rounded-lg px-4 py-3 pr-10 text-sm text-stone-900 dark:text-stone-50 placeholder-stone-500 focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600/50 transition-all disabled:opacity-50"
                       />
                       <button
                         type="button"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-300 transition-colors"
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 dark:hover:text-stone-300 transition-colors"
                         tabIndex="-1"
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -382,7 +382,7 @@ const Register = () => {
                       disabled={loading}
                       className="w-4 h-4 rounded accent-amber-600 cursor-pointer"
                     />
-                    <label htmlFor="savePassword" className="text-xs text-stone-400 cursor-pointer">
+                    <label htmlFor="savePassword" className="text-xs text-stone-600 dark:text-stone-400 cursor-pointer">
                       Save password in this browser
                     </label>
                   </div>
@@ -391,7 +391,7 @@ const Register = () => {
                   <button
                     type="submit"
                     disabled={loading}
-                    className="w-full mt-6 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-semibold py-3 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm uppercase tracking-wide"
+                    className="w-full mt-6 bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-semibold py-3 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm uppercase tracking-wide shadow-md hover:shadow-lg hover:shadow-amber-600/20"
                   >
                     {loading ? 'Sending verification code...' : 'Continue to Verification'}
                   </button>
@@ -409,11 +409,11 @@ const Register = () => {
                 transition={{ duration: 0.4 }}
               >
                 <div className="mb-8">
-                  <h2 className="font-serif text-2xl md:text-3xl text-stone-50 font-medium mb-2">
+                  <h2 className="font-serif text-3xl text-stone-900 dark:text-stone-50 font-light mb-2">
                     Verify Your Email
                   </h2>
-                  <p className="text-sm text-stone-400">
-                    We sent a 6-digit code to <span className="text-amber-600 font-medium">{email}</span>
+                  <p className="text-sm text-stone-600 dark:text-stone-400">
+                    We sent a 6-digit code to <span className="text-amber-600 dark:text-amber-500 font-medium">{email}</span>
                   </p>
                 </div>
 
@@ -421,16 +421,16 @@ const Register = () => {
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mb-6 p-3 bg-red-500/15 border border-red-500/30 rounded-lg text-red-300 text-sm font-medium"
+                    className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg text-red-700 dark:text-red-200 text-sm font-medium"
                   >
                     {error}
                   </motion.div>
                 )}
 
-                <form onSubmit={handleStep2Submit} className="space-y-6">
+                <form onSubmit={handleStep2Submit} className="space-y-6 mt-6">
                   {/* OTP Input */}
                   <div>
-                    <label className="block text-xs font-semibold text-stone-300 mb-4 uppercase tracking-wide">
+                    <label className="block text-xs font-semibold text-stone-700 dark:text-stone-300 mb-4 uppercase tracking-wide">
                       Verification Code
                     </label>
                     <div className="flex gap-2 justify-between">
@@ -445,7 +445,7 @@ const Register = () => {
                           onChange={(e) => handleOtpChange(index, e.target.value)}
                           onKeyDown={(e) => handleOtpKeyDown(index, e)}
                           disabled={loading}
-                          className="w-full aspect-square bg-stone-950/40 border-2 border-stone-700/60 hover:border-stone-600/60 rounded-lg text-center text-lg font-semibold text-stone-50 focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600/50 transition-all disabled:opacity-50"
+                          className="w-full aspect-square bg-stone-50 dark:bg-stone-950/40 border-2 border-stone-200 dark:border-stone-700/60 hover:border-stone-300 dark:hover:border-stone-600/60 rounded-lg text-center text-lg font-semibold text-stone-900 dark:text-stone-50 focus:outline-none focus:border-amber-600 focus:ring-1 focus:ring-amber-600/50 transition-all disabled:opacity-50"
                         />
                       ))}
                     </div>
@@ -453,13 +453,13 @@ const Register = () => {
 
                   {/* Timer */}
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-stone-400">
+                    <span className="text-stone-600 dark:text-stone-400">
                       {otpExpiry ? (
                         <>
-                          Code expires in: <span className="text-amber-600 font-semibold">{getOtpExpiry()}</span>
+                          Code expires in: <span className="text-amber-600 dark:text-amber-500 font-semibold">{getOtpExpiry()}</span>
                         </>
                       ) : (
-                        <span className="text-red-400">Code expired</span>
+                        <span className="text-red-600 dark:text-red-400">Code expired</span>
                       )}
                     </span>
                   </div>
@@ -468,21 +468,21 @@ const Register = () => {
                   <button
                     type="submit"
                     disabled={loading || otp.join('').length !== 6}
-                    className="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-semibold py-3 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm uppercase tracking-wide"
+                    className="w-full bg-gradient-to-r from-amber-600 to-amber-700 hover:from-amber-700 hover:to-amber-800 text-white font-semibold py-3 rounded-lg transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed text-sm uppercase tracking-wide shadow-md hover:shadow-lg hover:shadow-amber-600/20"
                   >
                     {loading ? 'Verifying...' : 'Create Account'}
                   </button>
 
                   {/* Resend OTP */}
                   <div className="text-center">
-                    <p className="text-sm text-stone-400 mb-3">
+                    <p className="text-sm text-stone-600 dark:text-stone-400 mb-3">
                       Didn't receive the code?
                     </p>
                     <button
                       type="button"
                       onClick={handleResendOtp}
                       disabled={resendCooldown > 0 || loading}
-                      className="text-amber-600 hover:text-amber-500 font-medium text-sm transition-colors disabled:text-stone-500 disabled:cursor-not-allowed"
+                      className="text-amber-600 hover:text-amber-700 dark:hover:text-amber-500 font-medium text-sm transition-colors disabled:text-stone-500 disabled:cursor-not-allowed"
                     >
                       {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend Code'}
                     </button>
@@ -497,7 +497,7 @@ const Register = () => {
                       setError('');
                     }}
                     disabled={loading}
-                    className="w-full text-stone-400 hover:text-stone-300 font-medium text-sm transition-colors disabled:opacity-50 py-2"
+                    className="w-full text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-300 font-medium text-sm transition-colors disabled:opacity-50 py-2"
                   >
                     Back to Sign Up
                   </button>
@@ -507,10 +507,10 @@ const Register = () => {
           </AnimatePresence>
 
           {/* Footer */}
-          <div className="mt-8 pt-6 border-t border-stone-800/60 text-center">
-            <p className="text-sm text-stone-400">
+          <div className="mt-8 pt-6 border-t border-stone-200 dark:border-stone-800 text-center">
+            <p className="text-sm text-stone-600 dark:text-stone-400">
               Already have an account?{' '}
-              <Link to="/login" className="text-amber-600 hover:text-amber-500 font-semibold transition-colors">
+              <Link to="/login" className="text-amber-600 hover:text-amber-700 dark:hover:text-amber-500 font-semibold transition-colors">
                 Sign In
               </Link>
             </p>
@@ -524,7 +524,7 @@ const Register = () => {
           transition={{ delay: 0.5 }}
           className="mt-6 text-center"
         >
-          <p className="text-xs text-stone-500">
+          <p className="text-xs text-stone-600 dark:text-stone-500">
             Your data is encrypted and secure. We never share your information.
           </p>
         </motion.div>

@@ -127,6 +127,9 @@ const NavBar = () => {
                     <span className="material-symbols-outlined text-[20px]">add_circle</span>
                   </Link>
                 )}
+                <Link to="/account" className={`transition-colors hover:text-amber-600 ${iconClass}`} title="Account">
+                  <span className="material-symbols-outlined text-[20px]">account_circle</span>
+                </Link>
                 <Link to="/favorites" className={`transition-colors hover:text-amber-600 ${iconClass}`} title="Favorites">
                   <span className="material-symbols-outlined text-[20px]">favorite</span>
                 </Link>
@@ -258,6 +261,13 @@ const NavBar = () => {
                         <span>Add Product</span>
                       </Link>
                     )}
+                    <Link
+                      to="/account"
+                      className="flex items-center gap-3 font-sans text-sm text-stone-600 dark:text-stone-300 hover:text-amber-600 transition-colors py-2"
+                    >
+                      <span className="material-symbols-outlined text-[20px]">account_circle</span>
+                      <span>Account</span>
+                    </Link>
                     <Link
                       to="/favorites"
                       className="flex items-center gap-3 font-sans text-sm text-stone-600 dark:text-stone-300 hover:text-amber-600 transition-colors py-2"
