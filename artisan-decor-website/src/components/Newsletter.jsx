@@ -11,6 +11,11 @@ const Newsletter = () => {
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
 
+  // Hide newsletter completely if not logged in
+  if (!isAuthenticated) {
+    return null;
+  }
+
   // Hide newsletter if user is already subscribed
   if (isAuthenticated && user?.emailSubscribed) {
     return (

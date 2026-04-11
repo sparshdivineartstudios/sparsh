@@ -144,16 +144,16 @@ const EmailVerificationRegister = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-stone-50 dark:bg-stone-950 flex items-center justify-center px-4 py-12">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-md bg-slate-800 border border-slate-700 rounded-2xl shadow-2xl overflow-hidden"
+        className="w-full max-w-md bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded-2xl shadow-lg overflow-hidden"
       >
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-pink-600 p-8 text-center">
+        <div className="bg-amber-600 dark:bg-amber-700 p-8 text-center">
           <h1 className="text-3xl font-serif text-white mb-2">🎨 Join Us</h1>
-          <p className="text-purple-100">Create your Sparsh account</p>
+          <p className="text-amber-100">Create your Sparsh account</p>
         </div>
 
         {/* Content */}
@@ -168,7 +168,7 @@ const EmailVerificationRegister = () => {
               className="space-y-6"
             >
               <div>
-                <label className="block text-sm font-semibold text-slate-200 mb-2">
+                <label className="block text-sm font-semibold text-stone-700 dark:text-stone-200 mb-2">
                   Full Name
                 </label>
                 <input
@@ -176,13 +176,13 @@ const EmailVerificationRegister = () => {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="John Doe"
-                  className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-lg text-stone-900 dark:text-stone-50 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-600 transition disabled:opacity-50"
                   disabled={loading}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-200 mb-2">
+                <label className="block text-sm font-semibold text-stone-700 dark:text-stone-200 mb-2">
                   Email Address
                 </label>
                 <input
@@ -190,7 +190,7 @@ const EmailVerificationRegister = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@example.com"
-                  className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-lg text-stone-900 dark:text-stone-50 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-600 transition disabled:opacity-50"
                   disabled={loading}
                 />
               </div>
@@ -198,7 +198,7 @@ const EmailVerificationRegister = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-lg transition disabled:opacity-50"
+                className="w-full py-3 px-4 bg-amber-600 hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-700 text-white font-semibold rounded-lg transition disabled:opacity-50"
               >
                 {loading ? '⏳ Sending Code...' : '📧 Send Verification Code'}
               </button>
@@ -207,7 +207,7 @@ const EmailVerificationRegister = () => {
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-sm text-emerald-400 bg-emerald-900/20 p-3 rounded-lg"
+                  className="text-sm text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 p-3 rounded-lg border border-emerald-200 dark:border-emerald-800"
                 >
                   {message}
                 </motion.p>
@@ -217,15 +217,15 @@ const EmailVerificationRegister = () => {
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-sm text-red-400 bg-red-900/20 p-3 rounded-lg"
+                  className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-3 rounded-lg border border-red-200 dark:border-red-800"
                 >
                   {error}
                 </motion.p>
               )}
 
-              <p className="text-sm text-slate-400 text-center">
+              <p className="text-sm text-stone-600 dark:text-stone-400 text-center">
                 Already have an account?{' '}
-                <a href="/login" className="text-purple-400 hover:text-purple-300 font-semibold">
+                <a href="/login" className="text-amber-600 dark:text-amber-500 hover:text-amber-700 dark:hover:text-amber-400 font-semibold">
                   Log in
                 </a>
               </p>
@@ -239,14 +239,14 @@ const EmailVerificationRegister = () => {
               onSubmit={handleRegister}
               className="space-y-6"
             >
-              <div className="bg-purple-900/20 border border-purple-700 rounded-lg p-4">
-                <p className="text-sm text-slate-300">
+              <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
+                <p className="text-sm text-stone-700 dark:text-stone-300">
                   📧 Verification code sent to <strong>{email}</strong>
                 </p>
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-200 mb-2">
+                <label className="block text-sm font-semibold text-stone-700 dark:text-stone-200 mb-2">
                   6-Digit Verification Code
                 </label>
                 <input
@@ -255,13 +255,13 @@ const EmailVerificationRegister = () => {
                   value={verificationCode}
                   onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, ''))}
                   placeholder="000000"
-                  className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500 text-center text-2xl tracking-widest"
+                  className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-lg text-stone-900 dark:text-stone-50 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-600 transition-all text-center text-2xl tracking-widest disabled:opacity-50"
                   disabled={loading}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-200 mb-2">
+                <label className="block text-sm font-semibold text-stone-700 dark:text-stone-200 mb-2">
                   Password
                 </label>
                 <input
@@ -269,13 +269,13 @@ const EmailVerificationRegister = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-lg text-stone-900 dark:text-stone-50 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-600 transition disabled:opacity-50"
                   disabled={loading}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-semibold text-slate-200 mb-2">
+                <label className="block text-sm font-semibold text-stone-700 dark:text-stone-200 mb-2">
                   Confirm Password
                 </label>
                 <input
@@ -283,7 +283,7 @@ const EmailVerificationRegister = () => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full px-4 py-3 bg-slate-700 border border-slate-600 rounded-lg text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                  className="w-full px-4 py-3 bg-stone-50 dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-lg text-stone-900 dark:text-stone-50 placeholder-stone-400 focus:outline-none focus:ring-2 focus:ring-amber-600 transition disabled:opacity-50"
                   disabled={loading}
                 />
               </div>
@@ -291,7 +291,7 @@ const EmailVerificationRegister = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full py-3 px-4 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-semibold rounded-lg transition disabled:opacity-50"
+                className="w-full py-3 px-4 bg-amber-600 hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-700 text-white font-semibold rounded-lg transition disabled:opacity-50"
               >
                 {loading ? '⏳ Creating Account...' : '🎉 Complete Registration'}
               </button>
@@ -300,7 +300,7 @@ const EmailVerificationRegister = () => {
                 type="button"
                 onClick={handleResendCode}
                 disabled={loading || timer > 0}
-                className="w-full py-2 px-4 text-purple-400 hover:text-purple-300 text-sm font-semibold disabled:opacity-30"
+                className="w-full py-2 px-4 text-amber-600 dark:text-amber-500 hover:text-amber-700 dark:hover:text-amber-400 text-sm font-semibold disabled:opacity-30"
               >
                 {timer > 0 ? `Resend in ${timer}s` : 'Resend Code'}
               </button>
@@ -309,7 +309,7 @@ const EmailVerificationRegister = () => {
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-sm text-emerald-400 bg-emerald-900/20 p-3 rounded-lg"
+                  className="text-sm text-emerald-600 dark:text-emerald-400 bg-emerald-50 dark:bg-emerald-900/20 p-3 rounded-lg border border-emerald-200 dark:border-emerald-800"
                 >
                   {message}
                 </motion.p>
@@ -319,7 +319,7 @@ const EmailVerificationRegister = () => {
                 <motion.p
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  className="text-sm text-red-400 bg-red-900/20 p-3 rounded-lg"
+                  className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-3 rounded-lg border border-red-200 dark:border-red-800"
                 >
                   {error}
                 </motion.p>
@@ -335,7 +335,7 @@ const EmailVerificationRegister = () => {
                   setPassword('');
                   setConfirmPassword('');
                 }}
-                className="w-full py-2 text-slate-400 hover:text-slate-300 text-sm"
+                className="w-full py-2 text-stone-600 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-300 text-sm"
               >
                 ← Back
               </button>

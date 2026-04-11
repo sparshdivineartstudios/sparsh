@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import axios from 'axios';
 import { API_URL } from '../utils/apiConfig';
+import { useAuth } from '../context/AuthContext';
 
 // Confetti particle component
 const Confetti = ({ id, duration = 2 }) => {
@@ -24,6 +25,8 @@ const Confetti = ({ id, duration = 2 }) => {
 };
 
 const Contact = () => {
+  const { user, isAuthenticated } = useAuth();
+  
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -37,6 +40,18 @@ const Contact = () => {
   const [showSuccess, setShowSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [confetti, setConfetti] = useState([]);
+
+  // Prefill form with logged-in user data
+  useEffect(() => {
+    if (isAuthenticated && user) {
+      setFormData(prev => ({
+        ...prev,
+        firstName: user.name?.split(' ')[0] || '',
+        lastName: user.name?.split(' ').slice(1).join(' ') || '',
+        email: user.email || '',
+      }));
+    }
+  }, [isAuthenticated, user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
