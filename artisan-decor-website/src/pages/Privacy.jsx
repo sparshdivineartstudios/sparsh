@@ -27,7 +27,7 @@ const Privacy = () => {
     },
     {
       title: 'Contact Us',
-      content: 'If you have questions or comments about this Privacy Policy, please contact us at: Sparsh Divine Art Studio | Email: contact@sparshdivineartstudio.me | Phone: +91-XXXXXXXXXX. We will respond to your inquiry within 5-7 business days.'
+      content: 'If you have questions or comments about this Privacy Policy, please contact us at: Sparsh Divine Art Studio | Email: sparshdivineartstudio@gmail.com | Phone: +91-8160901481. We will respond to your inquiry within 5-7 business days.'
     }
   ];
 
