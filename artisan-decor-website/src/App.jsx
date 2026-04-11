@@ -26,6 +26,7 @@ import OrderDetail from './pages/OrderDetail';
 import Account from './pages/Account';
 import Privacy from './pages/Privacy';
 import NotFound from './pages/NotFound';
+import ForgotPassword from './pages/ForgotPassword';
 import ScrollToTop from './components/ScrollToTop';
 import CursorGlow from './components/CursorGlow';
 import PrivateRoute from './components/PrivateRoute';
@@ -64,6 +65,7 @@ function App() {
                 <Route path="/contact" element={<Contact />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="/forgot-password" element={<ForgotPassword />} />
                 <Route path="/account" element={<PrivateRoute><Account /></PrivateRoute>} />
                 <Route path="/privacy" element={<Privacy />} />
                 <Route path="/favorites" element={<PrivateRoute><Favorites /></PrivateRoute>} />
