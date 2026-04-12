@@ -467,9 +467,16 @@ const Account = () => {
                               <button
                                 type="button"
                                 onClick={() => setShowPasswords({...showPasswords, current: !showPasswords.current})}
-                                className="absolute right-3 top-3 text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-300"
+                                className="absolute right-3 top-3 text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-300 transition-colors"
+                                tabIndex="-1"
                               >
-                                {showPasswords.current ? '🙈' : '👁️'}
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  {showPasswords.current ? (
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-4.803m5.596-3.856a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  ) : (
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  )}
+                                </svg>
                               </button>
                             </div>
                           </div>
@@ -490,9 +497,16 @@ const Account = () => {
                               <button
                                 type="button"
                                 onClick={() => setShowPasswords({...showPasswords, new: !showPasswords.new})}
-                                className="absolute right-3 top-3 text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-300"
+                                className="absolute right-3 top-3 text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-300 transition-colors"
+                                tabIndex="-1"
                               >
-                                {showPasswords.new ? '🙈' : '👁️'}
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  {showPasswords.new ? (
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-4.803m5.596-3.856a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  ) : (
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  )}
+                                </svg>
                               </button>
                             </div>
                           </div>
@@ -542,9 +556,16 @@ const Account = () => {
                               <button
                                 type="button"
                                 onClick={() => setShowPasswords({...showPasswords, confirm: !showPasswords.confirm})}
-                                className="absolute right-3 top-3 text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-300"
+                                className="absolute right-3 top-3 text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-300 transition-colors"
+                                tabIndex="-1"
                               >
-                                {showPasswords.confirm ? '🙈' : '👁️'}
+                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  {showPasswords.confirm ? (
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-4.803m5.596-3.856a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  ) : (
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                  )}
+                                </svg>
                               </button>
                             </div>
                           </div>
