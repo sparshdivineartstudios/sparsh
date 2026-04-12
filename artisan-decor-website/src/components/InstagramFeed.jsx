@@ -82,22 +82,19 @@ const InstagramFeed = ({ instagramHandle = 'sparshdivineartstudio', postsLimit =
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {posts.map((post, idx) => (
-          <motion.a
+          <motion.div
             key={post.id}
-            href={post.link}
-            target="_blank"
-            rel="noopener noreferrer"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ delay: idx * 0.1 }}
             className="group relative overflow-hidden rounded-lg aspect-square shadow-lg bg-stone-900"
           >
-            {/* Logic to handle video thumbnails vs images */}
+            {/* Image/Video with zoom on hover (desktop only) */}
             {post.image && post.image.includes('.mp4') ? (
               <video 
                 src={post.image}
-                className="w-full h-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-500"
+                className="w-full h-full object-cover opacity-80 transition-transform duration-500 md:group-hover:scale-110"
                 muted
                 loop
                 autoPlay
@@ -108,15 +105,15 @@ const InstagramFeed = ({ instagramHandle = 'sparshdivineartstudio', postsLimit =
                 src={post.image}
                 alt={post.caption || 'Instagram Post'}
                 crossOrigin="anonymous" 
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                className="w-full h-full object-cover transition-transform duration-500 md:group-hover:scale-110"
                 onError={(e) => {
                   e.target.src = 'https://via.placeholder.com/400?text=View+on+Instagram';
                 }}
               />
             )}
 
-            {/* Hover Overlay */}
-            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end">
+            {/* Overlay - Always visible on mobile, hover on desktop */}
+            <div className="absolute inset-0 bg-black/60 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end">
               <p className="text-white text-xs line-clamp-3 mb-3 leading-relaxed">
                 {post.caption}
               </p>
@@ -124,10 +121,18 @@ const InstagramFeed = ({ instagramHandle = 'sparshdivineartstudio', postsLimit =
                 <span className="flex items-center gap-1">
                   <span className="text-amber-500 text-sm">♥</span> {post.likes}
                 </span>
-                <span className="text-amber-500">View on IG →</span>
+                <a 
+                  href={post.link} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-amber-500 hover:text-amber-400 transition-colors"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  View on IG →
+                </a>
               </div>
             </div>
-          </motion.a>
+          </motion.div>
         ))}
       </div>
     </section>
