@@ -335,11 +335,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ── 4. INSTAGRAM FEED ── */}
-      <InstagramFeed 
-        instagramHandle="sparshdivineartstudio"
-        postsLimit={4}
-      />
+      
 
       {/* ── 4a. FEATURED REVIEWS CAROUSEL ── */}
       <FeaturedReviews />
@@ -561,7 +557,7 @@ const Home = () => {
             Follow the Studio
           </motion.h2>
         </div>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        {/* <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {(gridImages.length > 0 ? gridImages : [
             { url: 'https://sparshdivineartstudio.me/img-resin-tray.png', id: null },
             { url: 'https://sparshdivineartstudio.me/img-candle.png', id: null },
@@ -588,7 +584,12 @@ const Home = () => {
               )}
             </motion.div>
           ))}
-        </div>
+        </div> */}
+  {/* ── 4. INSTAGRAM FEED ── */}
+      <InstagramFeed 
+        instagramHandle="sparshdivineartstudio"
+        postsLimit={4}
+      />
       </section>
 
       {/* ── 10. COMMUNITY REVIEWS FEED (DYNAMIC) ── */}

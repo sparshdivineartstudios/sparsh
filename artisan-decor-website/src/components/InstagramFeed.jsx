@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { fetchInstagramPosts, getInstagramProfileUrl } from '../utils/instagramAPI';
+import { fetchInstagramPosts } from '../utils/instagramAPI';
 import { API_URL } from '../utils/apiConfig';
 
 /**
@@ -60,27 +60,8 @@ const InstagramFeed = ({ instagramHandle = 'sparshdivineartstudio', postsLimit =
     );
   }
 
-  const instagramProfileUrl = getInstagramProfileUrl(instagramHandle);
-
   return (
-    <section className="py-24 px-8 max-w-7xl mx-auto">
-      <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-16 gap-6">
-        <div>
-          <p className="font-sans text-amber-600 uppercase tracking-widest text-xs font-semibold mb-3">Follow the Studio</p>
-          <h2 className="font-serif text-4xl md:text-5xl text-stone-900 dark:text-stone-50">Latest from Instagram</h2>
-        </div>
-        <motion.a 
-          href={instagramProfileUrl} 
-          target="_blank" 
-          rel="noopener noreferrer"
-          whileHover={{ x: 4 }}
-          className="text-amber-600 font-semibold tracking-widest text-xs uppercase transition-colors dark:text-amber-500"
-        >
-          Follow on Instagram →
-        </motion.a>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {posts.map((post, idx) => (
           <motion.div
             key={post.id}
@@ -112,8 +93,8 @@ const InstagramFeed = ({ instagramHandle = 'sparshdivineartstudio', postsLimit =
               />
             )}
 
-            {/* Overlay - Always visible on mobile, hover on desktop */}
-            <div className="absolute inset-0 bg-black/60 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end">
+            {/* Overlay - Only at bottom on mobile, full on desktop hover */}
+            <div className="absolute bottom-0 left-0 right-0 md:inset-0 bg-gradient-to-t md:bg-black/60 from-black/80 to-transparent md:to-black/60 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end">
               <p className="text-white text-xs line-clamp-3 mb-3 leading-relaxed">
                 {post.caption}
               </p>
@@ -135,8 +116,7 @@ const InstagramFeed = ({ instagramHandle = 'sparshdivineartstudio', postsLimit =
           </motion.div>
         ))}
       </div>
-    </section>
-  );
+    );
 };
 
 export default InstagramFeed;
