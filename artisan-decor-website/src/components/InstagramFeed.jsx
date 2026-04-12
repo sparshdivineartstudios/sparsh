@@ -22,16 +22,21 @@ const InstagramFeed = ({ instagramHandle = 'sparshdivineartstudio', postsLimit =
       try {
         setLoading(true);
         setError(null);
+        console.log('📸 Fetching Instagram posts from:', `${API_URL}/api/instagram/posts?limit=${postsLimit}`);
+        
         const fetchedPosts = await fetchInstagramPosts(API_URL, postsLimit);
+        console.log('📸 Received posts:', fetchedPosts.length, fetchedPosts);
         
         if (fetchedPosts.length === 0) {
-          setError('No posts found');
+          setError('No posts found - check backend logs');
+          console.warn('No Instagram posts returned from backend');
         } else {
           setPosts(fetchedPosts);
+          console.log('✅ Instagram posts loaded successfully');
         }
       } catch (err) {
         setError(err.message);
-        console.error('Failed to load Instagram posts:', err);
+        console.error('❌ Failed to load Instagram posts:', err);
       } finally {
         setLoading(false);
       }
@@ -78,7 +83,30 @@ const InstagramFeed = ({ instagramHandle = 'sparshdivineartstudio', postsLimit =
   }
 
   if (error && posts.length === 0) {
-    return null; // Silently fail - don't show error UI
+    return (
+      <section className="py-24 px-8 max-w-7xl mx-auto">
+        <div className="text-center mb-16">
+          <motion.p
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="font-sans text-amber-600 dark:text-amber-500 uppercase tracking-widest text-xs font-semibold mb-3"
+          >
+            Follow the Studio
+          </motion.p>
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="font-serif text-4xl md:text-5xl text-stone-900 dark:text-stone-50 mb-4"
+          >
+            Latest from Instagram
+          </motion.h2>
+          <p className="text-red-600 dark:text-red-400 font-sans text-sm">
+            {error}  — Check browser console for details
+          </p>
+        </div>
+      </section>
+    );
   }
 
   const instagramProfileUrl = getInstagramProfileUrl(instagramHandle);
