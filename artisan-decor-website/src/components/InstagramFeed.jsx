@@ -61,7 +61,19 @@ const InstagramFeed = ({ instagramHandle = 'sparshdivineartstudio', postsLimit =
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div>
+      <div className="flex justify-end mb-6">
+        <motion.a 
+          href="https://www.instagram.com/_sparsh_divine_art_studio_"
+          target="_blank" 
+          rel="noopener noreferrer"
+          whileHover={{ x: 4 }}
+          className="text-amber-600 font-semibold tracking-widest text-xs uppercase transition-colors dark:text-amber-500"
+        >
+          Follow on Instagram →
+        </motion.a>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {posts.map((post, idx) => (
           <motion.div
             key={post.id}
@@ -116,7 +128,8 @@ const InstagramFeed = ({ instagramHandle = 'sparshdivineartstudio', postsLimit =
           </motion.div>
         ))}
       </div>
-    );
+    </div>
+  );
 };
 
 export default InstagramFeed;

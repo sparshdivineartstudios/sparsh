@@ -18,7 +18,7 @@ const Footer = () => {
           <div className="flex gap-5 mt-6">
             {[
               { name: 'Instagram', url: 'https://www.instagram.com/_sparsh_divine_art_studio_' },
-              { name: 'Pinterest', url: 'https://pinterest.com/sparshdivineartstudio' },
+              { name: 'Facebook', url: 'https://www.facebook.com/profile.php?id=61573356191681' },
               { name: 'WhatsApp', url: 'https://wa.me/918160901481' }
             ].map((social, i) => (
               <a

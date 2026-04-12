@@ -243,8 +243,8 @@ const Contact = () => {
             <h3 className="font-serif text-xl font-medium text-stone-900 dark:text-stone-50 mb-3">Follow the Studio</h3>
             <div className="flex gap-4">
               {[
-                { name: 'Instagram', url: 'https://www.instagram.com/_sparsh_divine_art_studio_' }
-                // ,{ name: 'Pinterest', url: 'https://pinterest.com/sparshdivineartstudio' }
+                { name: 'Instagram', url: 'https://www.instagram.com/_sparsh_divine_art_studio_' },
+                { name: 'Facebook', url: 'https://www.facebook.com/profile.php?id=61573356191681' }
               ].map((social, i) => (
                 <a
                   key={i}

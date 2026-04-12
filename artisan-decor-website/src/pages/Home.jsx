@@ -318,7 +318,14 @@ const Home = () => {
                       {cat.badge}
                     </span>
                   </div>
-                  <div className="absolute bottom-0 left-0 right-0 p-8">
+                  
+                  {/* Mobile: Title only at bottom */}
+                  <div className="absolute bottom-0 left-0 right-0 p-6 md:hidden">
+                    <h3 className="font-serif text-2xl text-white">{cat.title}</h3>
+                  </div>
+                  
+                  {/* Desktop: Full details on hover */}
+                  <div className="absolute bottom-0 left-0 right-0 p-8 hidden md:block">
                     <p className="font-sans text-amber-400 text-xs uppercase tracking-widest mb-2">{cat.subtitle}</p>
                     <h3 className="font-serif text-3xl text-white mb-3 group-hover:text-amber-400 transition-colors">{cat.title}</h3>
                     <p className="font-sans text-stone-300 text-sm leading-relaxed opacity-0 group-hover:opacity-100 transition-opacity duration-300 transform translate-y-2 group-hover:translate-y-0">
