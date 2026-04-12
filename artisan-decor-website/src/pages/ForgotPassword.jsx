@@ -95,7 +95,16 @@ const ForgotPassword = () => {
         setStep(2);
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to send OTP');
+      // If error is "already registered" or "email exists", proceed with OTP as this is normal for password reset
+      const errorMsg = err.response?.data?.message || '';
+      if (errorMsg.toLowerCase().includes('already registered') || errorMsg.toLowerCase().includes('exists')) {
+        // For forgot password, if email exists, we should proceed normally
+        setOtpSent(true);
+        setOtpExpiry(new Date(Date.now() + 2 * 60 * 1000)); // 2 minutes
+        setStep(2);
+      } else {
+        setError(errorMsg || 'Failed to send OTP');
+      }
     } finally {
       setLoading(false);
     }
