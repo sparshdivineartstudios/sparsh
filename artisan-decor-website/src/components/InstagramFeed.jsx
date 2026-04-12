@@ -86,15 +86,15 @@ const InstagramFeed = ({ instagramHandle = 'sparshdivineartstudio', postsLimit =
             transition={{ delay: idx * 0.1 }}
             className="group relative overflow-hidden rounded-lg aspect-square shadow-lg"
           >
+            // ... inside your map function
             <img
-              src={post.image} // Backend now sends the full Proxy URL
-              alt={post.caption || 'Instagram Post'}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-              loading="lazy"
-              crossOrigin="anonymous"
-              onError={(e) => {
-                e.target.src = 'https://via.placeholder.com/400?text=Image+Expired';
-              }}
+            src={post.image} // This now contains the full proxy URL from the backend
+            alt={post.caption}
+            crossOrigin="anonymous" 
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+            onError={(e) => {
+                e.target.src = 'https://via.placeholder.com/400?text=Check+Permissions';
+            }}
             />
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity p-4 flex flex-col justify-end">
               <p className="text-white text-xs line-clamp-2 mb-2">{post.caption}</p>
