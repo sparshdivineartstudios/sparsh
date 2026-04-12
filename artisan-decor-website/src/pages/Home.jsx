@@ -5,6 +5,7 @@ import axios from 'axios';
 import MagneticButton from '../components/MagneticButton';
 import { API_URL } from '../utils/apiConfig';
 import FeaturedReviews from '../components/FeaturedReviews';
+import InstagramFeed from '../components/InstagramFeed';
 import Newsletter from '../components/Newsletter';
 
 /* ─── Drive URL → reliable thumbnail URL ─── */
@@ -334,83 +335,11 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ── 4. FEATURED PRODUCTS ── */}
-      <section className="py-24 px-8 max-w-7xl mx-auto bg-stone-100/50 dark:bg-stone-900/30 rounded-3xl">
-        <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-16 gap-6">
-          <div>
-            <motion.p
-              initial={{ opacity: 0, y: 15 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="font-sans text-amber-600 dark:text-amber-500 uppercase tracking-widest text-xs font-semibold mb-3"
-            >
-              Curated for You
-            </motion.p>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="font-serif text-4xl md:text-5xl text-stone-900 dark:text-stone-50"
-            >
-              Featured Pieces
-            </motion.h2>
-          </div>
-          <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }} transition={{ delay: 0.2 }}>
-            <Link to="/products" className="font-sans text-sm text-stone-500 hover:text-amber-600 transition-colors uppercase tracking-widest border-b border-stone-300 dark:border-stone-700 pb-1">
-              View All →
-            </Link>
-          </motion.div>
-        </div>
-
-        {productsLoading ? (
-          /* Skeleton while API loads */
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {[0, 1, 2].map(i => <SkeletonCard key={i} idx={i} />)}
-          </div>
-        ) : featuredProducts.length > 0 ? (
-          /* Real API products */
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {featuredProducts.map((product, idx) => (
-              <ProductCard key={product._id} product={product} idx={idx} />
-            ))}
-          </div>
-        ) : (
-          /* Fallback: local generated images if API fails */
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
-            {[
-              { img: 'https://sparshdivineartstudio.me/img-resin-tray.png', name: 'Obsidian Resin Tray', price: '₹2,499', tag: 'Resin Art' },
-              { img: 'https://sparshdivineartstudio.me/img-candle.png', name: 'Amber Soy Pillar Candle', price: '₹1,299', tag: 'Wax Candle' },
-              { img: 'https://sparshdivineartstudio.me/img-concrete-vase.png', name: 'Brutalist Concrete Vase', price: '₹3,799', tag: 'Concrete Antique' },
-            ].map((item, idx) => (
-              <motion.div
-                key={idx}
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.6, delay: idx * 0.15 }}
-                className="group"
-              >
-                <Link to="/products">
-                  <div className="relative overflow-hidden rounded-xl bg-stone-100 dark:bg-stone-900 aspect-[3/4] mb-4 shadow-md">
-                    <img src={item.img} alt={item.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" />
-                    <div className="absolute top-3 left-3">
-                      <span className="bg-stone-900/80 text-amber-400 font-sans text-[9px] font-bold uppercase tracking-widest px-2.5 py-1 rounded-full backdrop-blur-sm">
-                        {item.tag}
-                      </span>
-                    </div>
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-6">
-                      <span className="text-white font-sans text-xs uppercase tracking-widest font-semibold">Explore Gallery →</span>
-                    </div>
-                  </div>
-                  <h3 className="font-serif text-lg font-medium text-stone-900 dark:text-stone-50 group-hover:text-amber-600 transition-colors">{item.name}</h3>
-                  <p className="font-sans text-sm font-semibold text-amber-600 dark:text-amber-500 mt-1">{item.price}</p>
-                </Link>
-              </motion.div>
-            ))}
-          </div>
-        )}
-      </section>
+      {/* ── 4. INSTAGRAM FEED ── */}
+      <InstagramFeed 
+        instagramHandle="sparshdivineartstudio"
+        postsLimit={4}
+      />
 
       {/* ── 4a. FEATURED REVIEWS CAROUSEL ── */}
       <FeaturedReviews />
