@@ -467,7 +467,7 @@ const Account = () => {
                               <button
                                 type="button"
                                 onClick={() => setShowPasswords({...showPasswords, current: !showPasswords.current})}
-                                className="absolute right-3 top-3 text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-300 transition-colors"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 dark:hover:text-stone-300 transition-colors"
                                 tabIndex="-1"
                               >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -497,7 +497,7 @@ const Account = () => {
                               <button
                                 type="button"
                                 onClick={() => setShowPasswords({...showPasswords, new: !showPasswords.new})}
-                                className="absolute right-3 top-3 text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-300 transition-colors"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 dark:hover:text-stone-300 transition-colors"
                                 tabIndex="-1"
                               >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -556,7 +556,7 @@ const Account = () => {
                               <button
                                 type="button"
                                 onClick={() => setShowPasswords({...showPasswords, confirm: !showPasswords.confirm})}
-                                className="absolute right-3 top-3 text-stone-500 dark:text-stone-400 hover:text-stone-700 dark:hover:text-stone-300 transition-colors"
+                                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600 dark:hover:text-stone-300 transition-colors"
                                 tabIndex="-1"
                               >
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
