@@ -84,27 +84,19 @@ const ForgotPassword = () => {
 
     setLoading(true);
     try {
-      const response = await axios.post(`${API_URL}/api/auth/send-verification-code`, {
-        email: email.toLowerCase(),
-        name: 'User'
+      const response = await axios.post(`${API_URL}/api/auth/send-forgot-password-code`, {
+        email: email.toLowerCase()
       });
 
       if (response.data.success) {
+        setError(''); // Clear any previous errors
         setOtpSent(true);
         setOtpExpiry(new Date(Date.now() + 2 * 60 * 1000)); // 2 minutes
         setStep(2);
       }
     } catch (err) {
-      // If error is "already registered" or "email exists", proceed with OTP as this is normal for password reset
-      const errorMsg = err.response?.data?.message || '';
-      if (errorMsg.toLowerCase().includes('already registered') || errorMsg.toLowerCase().includes('exists')) {
-        // For forgot password, if email exists, we should proceed normally
-        setOtpSent(true);
-        setOtpExpiry(new Date(Date.now() + 2 * 60 * 1000)); // 2 minutes
-        setStep(2);
-      } else {
-        setError(errorMsg || 'Failed to send OTP');
-      }
+      const errorMsg = err.response?.data?.message || 'Failed to send password reset code';
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
@@ -153,18 +145,19 @@ const ForgotPassword = () => {
     setResendCooldown(60);
 
     try {
-      const response = await axios.post(`${API_URL}/api/auth/send-verification-code`, {
-        email: email.toLowerCase(),
-        name: 'User'
+      const response = await axios.post(`${API_URL}/api/auth/send-forgot-password-code`, {
+        email: email.toLowerCase()
       });
 
       if (response.data.success) {
         setOtp(['', '', '', '', '', '']);
         setOtpExpiry(new Date(Date.now() + 2 * 60 * 1000)); // 2 minutes
         document.getElementById('otp-0')?.focus();
+        setError(''); // Clear any errors
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Failed to resend OTP');
+      const errorMsg = err.response?.data?.message || 'Failed to resend password reset code';
+      setError(errorMsg);
     } finally {
       setLoading(false);
     }
