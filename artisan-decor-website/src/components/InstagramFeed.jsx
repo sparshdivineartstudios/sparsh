@@ -22,21 +22,21 @@ const InstagramFeed = ({ instagramHandle = 'sparshdivineartstudio', postsLimit =
       try {
         setLoading(true);
         setError(null);
-        console.log('📸 Fetching Instagram posts from:', `${API_URL}/api/instagram/posts?limit=${postsLimit}`);
+        // console.log('📸 Fetching Instagram posts from:', `${API_URL}/api/instagram/posts?limit=${postsLimit}`);
         
         const fetchedPosts = await fetchInstagramPosts(API_URL, postsLimit);
-        console.log('📸 Received posts:', fetchedPosts.length, fetchedPosts);
+        // console.log('📸 Received posts:', fetchedPosts.length, fetchedPosts);
         
         if (fetchedPosts.length === 0) {
           setError('No posts found - check backend logs');
-          console.warn('No Instagram posts returned from backend');
+          // console.warn('No Instagram posts returned from backend');
         } else {
           setPosts(fetchedPosts);
-          console.log('✅ Instagram posts loaded successfully');
+          // console.log('✅ Instagram posts loaded successfully');
         }
       } catch (err) {
         setError(err.message);
-        console.error('❌ Failed to load Instagram posts:', err);
+        // console.error('❌ Failed to load Instagram posts:', err);
       } finally {
         setLoading(false);
       }
@@ -162,16 +162,23 @@ const InstagramFeed = ({ instagramHandle = 'sparshdivineartstudio', postsLimit =
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-50px' }}
               transition={{ duration: 0.6, delay: idx * 0.1 }}
-              className="group relative overflow-hidden rounded-lg aspect-square shadow-md"
+              className="group relative overflow-hidden rounded-lg aspect-square shadow-lg hover:shadow-2xl transition-shadow"
               whileHover={{ y: -8 }}
             >
-              {/* Image */}
-              <div className="absolute inset-0 overflow-hidden">
+              {/* Image - High Quality Display */}
+              <div className="absolute inset-0 overflow-hidden bg-stone-900">
                 <img
                   src={post.image}
                   alt={post.caption.slice(0, 50) || 'Instagram Post'}
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  className="w-full h-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
                   loading="lazy"
+                  decoding="async"
+                  fetchpriority="high"
+                  crossOrigin="anonymous"
+                  onError={(e) => {
+                    // Fallback if image fails to load
+                    e.target.src = 'https://via.placeholder.com/400?text=Image+Unavailable';
+                  }}
                 />
               </div>
 

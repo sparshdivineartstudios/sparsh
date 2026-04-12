@@ -37,7 +37,7 @@ export const fetchInstagramPosts = async (backendUrl, limit = 4) => {
     // The backend returns already formatted posts
     return data.data || [];
   } catch (error) {
-    console.error('Error fetching Instagram posts:', error);
+    // console.error('Error fetching Instagram posts:', error);
     return [];
   }
 };
